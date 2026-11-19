@@ -1,0 +1,9 @@
+{
+  "appId": "com.finora.personalfinance",
+  "appName": "Finora",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  }
+}
