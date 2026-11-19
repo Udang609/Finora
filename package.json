@@ -2,13 +2,15 @@
   "name": "finora",
   "private": true,
   "version": "1.0.0",
-  "description": "Finora — Personal Finance App. Aplikasi manajemen keuangan pribadi modern untuk mengelola pemasukan, pengeluaran, anggaran, dan target tabungan dengan dukungan Guest Mode & Account Mode.",
+  "description": "Finora: Personal Finance App. Aplikasi manajemen keuangan pribadi modern untuk mengelola pemasukan, pengeluaran, anggaran, dan target tabungan dengan dukungan Guest Mode & Account Mode.",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "assets": "node scripts/generate-assets.mjs",
+    "assets:android": "npm run assets && capacitor-assets generate --android --iconBackgroundColor \"#142C53\" --iconBackgroundColorDark \"#0F2242\" --splashBackgroundColor \"#142C53\" --splashBackgroundColorDark \"#0F2242\""
   },
   "dependencies": {
     "@capacitor/android": "^8.6.2",
@@ -21,6 +23,7 @@
     "recharts": "^3.11.0"
   },
   "devDependencies": {
+    "@capacitor/assets": "^4.0.0",
     "@types/node": "^24.19.2",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
@@ -28,6 +31,7 @@
     "autoprefixer": "^10.6.2",
     "oxlint": "^1.90.0",
     "postcss": "^8.5.33",
+    "sharp": "^0.35.5",
     "tailwindcss": "^3.4.19",
     "typescript": "~7.0.2",
     "vite": "^8.3.6"

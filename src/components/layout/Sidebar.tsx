@@ -10,7 +10,6 @@ import {
   ChevronDown, 
   ChevronRight, 
   Plus, 
-  Wallet,
   ShieldCheck,
   UserCheck
 } from 'lucide-react';
@@ -72,9 +71,13 @@ export const Sidebar: React.FC = () => {
       {/* Brand Header */}
       <div className="flex items-center justify-between px-6 py-6 border-b border-white/10">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-finora-primary flex items-center justify-center text-white shadow-md">
-            <Wallet className="w-5 h-5" />
-          </div>
+          <img
+            src="./pwa-192x192.png"
+            alt=""
+            width={40}
+            height={40}
+            className="h-10 w-10 rounded-xl shadow-md flex-shrink-0"
+          />
           <div>
             <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-1.5">
               FINORA

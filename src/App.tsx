@@ -4,6 +4,7 @@ import { Sidebar } from './components/layout/Sidebar';
 import { Topbar } from './components/layout/Topbar';
 import { BottomNav } from './components/layout/BottomNav';
 import { ToastContainer } from './components/common/Toast';
+import { InstallBanner } from './components/common/InstallBanner';
 import { TransactionModal } from './components/transactions/TransactionModal';
 
 // Pages
@@ -68,6 +69,7 @@ const MainLayout: React.FC = () => {
 
         {/* Bottom Navigation for Mobile */}
         <BottomNav />
+        <InstallBanner />
       </div>
 
       {/* Global Add/Edit Transaction Modal */}

@@ -1,4 +1,4 @@
-# 💳 FINORA — Personal Finance App
+# 💳 FINORA: Personal Finance App
 
 [![Release](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com)
@@ -103,7 +103,20 @@ Finora memecahkan masalah ini dengan:
 - **Charts:** [Recharts](https://recharts.org/)
 - **Icons:** [Lucide React](https://lucide.dev/)
 - **State & Storage:** React Context API + Persistent LocalStorage Engine
-- **CI/CD:** GitHub Actions (Deploy otomatis ke GitHub Pages)
+- **Mobile:** Capacitor 8 (Android) + PWA (installable, offline shell)
+- **CI/CD:** GitHub Actions (GitHub Pages + build APK otomatis)
+
+---
+
+## 📲 PWA (Install dari Browser)
+
+Finora dapat dipasang langsung dari browser tanpa Play Store:
+
+1. Buka **https://udang609.github.io/Finora/** di Chrome atau Edge (Android/desktop).
+2. Ketuk tombol **Pasang Finora di HP** yang muncul di bawah layar, atau buka menu browser lalu pilih **Pasang aplikasi**.
+3. Di iPhone/iPad, buka lewat Safari, ketuk **Bagikan**, lalu **Tambah ke Layar Utama**.
+
+Setelah terpasang, Finora berjalan dalam mode `standalone` (tanpa address bar) dan shell aplikasi tetap bisa dibuka saat koneksi terputus. Data keuangan tetap tersimpan lokal di perangkat.
 
 ---
 
@@ -111,7 +124,8 @@ Finora memecahkan masalah ini dengan:
 
 Finora tersedia sebagai aplikasi Android native melalui **Capacitor**. File APK dibangun otomatis oleh GitHub Actions setiap kali ada push ke branch `main`.
 
-- **Download APK terbaru:** [GitHub Releases — Finora v1.0.0](https://github.com/Udang609/Finora/releases/latest)
+- **Download APK terbaru:** [GitHub Releases: Finora v1.0.0](https://github.com/Udang609/Finora/releases/latest)
+- **Regenerate ikon & splash Android:** `npm run assets:android`
 - **Build manual (lokal):**
   ```bash
   npm run build

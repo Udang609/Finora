@@ -260,9 +260,9 @@ export const TransactionPage: React.FC = () => {
                             <p className="text-sm font-semibold text-finora-textPrimary truncate group-hover:text-finora-primary transition-colors">
                               {tx.title}
                             </p>
-                            <div className="flex items-center gap-2 mt-0.5">
+                            <div className="flex items-center gap-2 mt-0.5 min-w-0">
                               <span
-                                className={`px-2 py-0.5 rounded text-[10px] font-medium border ${catColor.bg} ${catColor.text} ${catColor.border}`}
+                                className={`px-2 py-0.5 rounded text-[10px] font-medium border whitespace-nowrap flex-shrink-0 ${catColor.bg} ${catColor.text} ${catColor.border}`}
                               >
                                 {tx.category}
                               </span>
@@ -279,14 +279,14 @@ export const TransactionPage: React.FC = () => {
                         <div className="flex items-center gap-3 sm:gap-4 pl-3 flex-shrink-0">
                           <span
                             onClick={() => setSelectedTxForDetail(tx)}
-                            className={`text-sm sm:text-base font-bold cursor-pointer ${
+                            className={`text-sm sm:text-base font-bold cursor-pointer whitespace-nowrap ${
                               isIncome ? 'text-finora-green' : 'text-finora-red'
                             }`}
                           >
                             {formatSignedIDR(tx.amount, tx.type)}
                           </span>
 
-                          <div className="flex items-center gap-1 opacity-80 sm:opacity-0 group-hover:opacity-100 transition-opacity">
+                          <div className="hidden sm:flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                             <button
                               onClick={() => handleEdit(tx)}
                               className="p-1.5 text-slate-400 hover:text-finora-primary hover:bg-blue-50 rounded-lg transition-colors"

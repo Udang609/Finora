@@ -12,6 +12,7 @@ import {
 import { useFinance } from '../../context/FinanceContext';
 import { Button } from '../common/Button';
 import { ConfirmDialog } from '../common/ConfirmDialog';
+import { InstallCard } from '../common/InstallCard';
 
 type SettingsTab = 'profile' | 'preferences' | 'account' | 'about';
 
@@ -64,8 +65,8 @@ export const SettingsPage: React.FC = () => {
         </p>
       </div>
 
-      {/* Tabs */}
-      <div className="flex border-b border-finora-border overflow-x-auto gap-4">
+      {/* Tabs: two compact rows on mobile, underline row from tablet up */}
+      <div className="grid grid-cols-2 gap-2 sm:flex sm:gap-4 sm:border-b sm:border-finora-border">
         {[
           { id: 'profile' as SettingsTab, label: 'Profil', icon: User },
           { id: 'preferences' as SettingsTab, label: 'Preferensi', icon: Sliders },
@@ -78,10 +79,10 @@ export const SettingsPage: React.FC = () => {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 py-3 px-1 border-b-2 font-medium text-xs sm:text-sm transition-all whitespace-nowrap ${
+              className={`flex items-center justify-center gap-2 min-h-[44px] rounded-lg px-3 py-2 text-xs font-medium transition-colors whitespace-nowrap sm:justify-start sm:min-h-0 sm:rounded-none sm:border-b-2 sm:px-1 sm:py-3 sm:text-sm ${
                 isActive
-                  ? 'border-finora-primary text-finora-primary font-semibold'
-                  : 'border-transparent text-finora-textSecondary hover:text-finora-textPrimary'
+                  ? 'bg-finora-lightBlue text-finora-primary font-semibold sm:border-finora-primary sm:bg-transparent'
+                  : 'bg-white text-finora-textSecondary hover:text-finora-textPrimary sm:border-transparent sm:bg-transparent'
               }`}
             >
               <Icon className="w-4 h-4" />
@@ -283,9 +284,11 @@ export const SettingsPage: React.FC = () => {
       {/* Tab 4: About & Acceptance Criteria */}
       {activeTab === 'about' && (
         <div className="bg-white rounded-card p-6 border border-finora-border shadow-soft max-w-2xl space-y-6">
+          <InstallCard />
+
           <div>
             <h3 className="text-lg font-bold text-finora-textPrimary flex items-center gap-2">
-              FINORA — Personal Finance App
+              FINORA: Personal Finance App
               <span className="text-xs font-semibold px-2 py-0.5 rounded bg-blue-100 text-finora-primary">
                 v1.0
               </span>

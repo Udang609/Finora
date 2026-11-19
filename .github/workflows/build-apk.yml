@@ -57,9 +57,9 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v1.0.0
-          name: Finora v1.0.0 — Android APK
+          name: Finora v1.0.0 (Android APK)
           body: |
-            Rilis perdana aplikasi FINORA — Personal Finance App.
+            Rilis perdana aplikasi FINORA: Personal Finance App.
 
             - APK Android (debug build) siap dipasang di perangkat.
             - Dashboard, transaksi, anggaran, tabungan, laporan, kalkulator, pengaturan.
