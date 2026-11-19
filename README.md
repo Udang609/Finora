@@ -107,6 +107,24 @@ Finora memecahkan masalah ini dengan:
 
 ---
 
+## 📱 Versi Android (APK)
+
+Finora tersedia sebagai aplikasi Android native melalui **Capacitor**. File APK dibangun otomatis oleh GitHub Actions setiap kali ada push ke branch `main`.
+
+- **Download APK terbaru:** [GitHub Releases — Finora v1.0.0](https://github.com/Udang609/Finora/releases/latest)
+- **Build manual (lokal):**
+  ```bash
+  npm run build
+  npx cap sync android
+  cd android
+  ./gradlew assembleDebug
+  ```
+  Hasil APK: `android/app/build/outputs/apk/debug/app-debug.apk`
+
+> Catatan: APK ini adalah *debug build* (belum ditandatangani untuk Google Play). Aktifkan **"Install from unknown sources"** pada perangkat Android sebelum memasang.
+
+---
+
 ## 🚀 Cara Menjalankan Secara Lokal
 
 1. **Clone repository ini:**
