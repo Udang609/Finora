@@ -15,7 +15,7 @@ export const INITIAL_SAVINGS_GOALS: SavingsGoal[] = [];
 
 export const SAMPLE_TRANSACTIONS: Transaction[] = [
   {
-    id: 'tx-1',
+    id: 'demo-tx-1',
     title: 'Gaji Bulanan',
     type: 'income',
     amount: 10000000,
@@ -25,7 +25,7 @@ export const SAMPLE_TRANSACTIONS: Transaction[] = [
     createdAt: '2026-11-19T08:00:00.000Z',
   },
   {
-    id: 'tx-2',
+    id: 'demo-tx-2',
     title: 'Bonus Proyek Freelance',
     type: 'income',
     amount: 2500000,
@@ -35,7 +35,7 @@ export const SAMPLE_TRANSACTIONS: Transaction[] = [
     createdAt: '2026-11-15T14:30:00.000Z',
   },
   {
-    id: 'tx-3',
+    id: 'demo-tx-3',
     title: 'Makan Siang Tim',
     type: 'expense',
     amount: 25000,
@@ -45,7 +45,7 @@ export const SAMPLE_TRANSACTIONS: Transaction[] = [
     createdAt: '2026-11-19T12:30:00.000Z',
   },
   {
-    id: 'tx-4',
+    id: 'demo-tx-4',
     title: 'Transportasi Commuter Line',
     type: 'expense',
     amount: 20000,
@@ -55,7 +55,7 @@ export const SAMPLE_TRANSACTIONS: Transaction[] = [
     createdAt: '2026-11-19T07:15:00.000Z',
   },
   {
-    id: 'tx-5',
+    id: 'demo-tx-5',
     title: 'Belanja Mingguan Supermarket',
     type: 'expense',
     amount: 705000,
@@ -65,7 +65,7 @@ export const SAMPLE_TRANSACTIONS: Transaction[] = [
     createdAt: '2026-11-17T18:00:00.000Z',
   },
   {
-    id: 'tx-6',
+    id: 'demo-tx-6',
     title: 'Tagihan Listrik & Internet',
     type: 'expense',
     amount: 750000,
@@ -75,7 +75,7 @@ export const SAMPLE_TRANSACTIONS: Transaction[] = [
     createdAt: '2026-11-10T10:00:00.000Z',
   },
   {
-    id: 'tx-7',
+    id: 'demo-tx-7',
     title: 'Bensin & Parkir Bulanan',
     type: 'expense',
     amount: 230000,
@@ -85,7 +85,7 @@ export const SAMPLE_TRANSACTIONS: Transaction[] = [
     createdAt: '2026-11-08T09:20:00.000Z',
   },
   {
-    id: 'tx-8',
+    id: 'demo-tx-8',
     title: 'Langganan Streaming & Hiburan',
     type: 'expense',
     amount: 220000,
@@ -95,7 +95,7 @@ export const SAMPLE_TRANSACTIONS: Transaction[] = [
     createdAt: '2026-11-05T11:00:00.000Z',
   },
   {
-    id: 'tx-9',
+    id: 'demo-tx-9',
     title: 'Belanja Pakaian Kerja',
     type: 'expense',
     amount: 800000,
@@ -105,7 +105,7 @@ export const SAMPLE_TRANSACTIONS: Transaction[] = [
     createdAt: '2026-11-03T16:45:00.000Z',
   },
   {
-    id: 'tx-10',
+    id: 'demo-tx-10',
     title: 'Asuransi & Check-up Kesehatan',
     type: 'expense',
     amount: 1000000,
@@ -118,21 +118,21 @@ export const SAMPLE_TRANSACTIONS: Transaction[] = [
 
 export const SAMPLE_BUDGETS: Budget[] = [
   {
-    id: 'bg-1',
+    id: 'demo-bg-1',
     category: 'Makanan & Minuman',
     amount: 1000000,
     month: 11,
     year: 2026,
   },
   {
-    id: 'bg-2',
+    id: 'demo-bg-2',
     category: 'Transportasi',
     amount: 500000,
     month: 11,
     year: 2026,
   },
   {
-    id: 'bg-3',
+    id: 'demo-bg-3',
     category: 'Tagihan & Utilitas',
     amount: 500000,
     month: 11,
@@ -142,7 +142,7 @@ export const SAMPLE_BUDGETS: Budget[] = [
 
 export const SAMPLE_SAVINGS_GOALS: SavingsGoal[] = [
   {
-    id: 'sg-1',
+    id: 'demo-sg-1',
     title: 'Membeli Laptop',
     targetAmount: 10000000,
     currentAmount: 3000000,
@@ -151,7 +151,7 @@ export const SAMPLE_SAVINGS_GOALS: SavingsGoal[] = [
     createdAt: '2026-10-01T00:00:00.000Z',
   },
   {
-    id: 'sg-2',
+    id: 'demo-sg-2',
     title: 'Liburan ke Bali',
     targetAmount: 5000000,
     currentAmount: 2000000,
