@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { 
   User, 
   Sliders, 
@@ -7,12 +7,17 @@ import {
   Save, 
   RotateCcw, 
   CheckCircle2, 
-  LogOut 
+  LogOut,
+  Upload,
+  Trash2,
+  Camera,
+  Sparkles
 } from 'lucide-react';
 import { useFinance } from '../../context/FinanceContext';
 import { Button } from '../common/Button';
 import { ConfirmDialog } from '../common/ConfirmDialog';
 import { InstallCard } from '../common/InstallCard';
+import { processAvatarFile } from '../../utils/imageHelper';
 
 type SettingsTab = 'profile' | 'preferences' | 'account' | 'about';
 
@@ -21,7 +26,8 @@ export const SettingsPage: React.FC = () => {
     userProfile, 
     updateUserProfile, 
     logout,
-    resetAllData 
+    resetAllData,
+    loadSampleData
   } = useFinance();
 
   const [activeTab, setActiveTab] = useState<SettingsTab>('profile');
@@ -29,10 +35,47 @@ export const SettingsPage: React.FC = () => {
   // Form states for profile
   const [name, setName] = useState(userProfile.name);
   const [avatarUrl, setAvatarUrl] = useState(userProfile.avatarUrl);
+  const [avatarError, setAvatarError] = useState('');
+  const [isProcessingAvatar, setIsProcessingAvatar] = useState(false);
 
-  // Reset confirmation dialogs
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Reset & action confirmation dialogs
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
+  const [isSampleConfirmOpen, setIsSampleConfirmOpen] = useState(false);
   const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setAvatarError('');
+    setIsProcessingAvatar(true);
+
+    try {
+      const dataUrl = await processAvatarFile(file);
+      setAvatarUrl(dataUrl);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setAvatarError(err.message);
+      } else {
+        setAvatarError('Gagal memproses foto avatar.');
+      }
+    } finally {
+      setIsProcessingAvatar(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
+  const handleRemoveAvatar = () => {
+    setAvatarUrl('');
+    setAvatarError('');
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
 
   const handleSaveProfile = (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,13 +85,6 @@ export const SettingsPage: React.FC = () => {
       avatarUrl: avatarUrl.trim(),
     });
   };
-
-  const presetAvatars = [
-    'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=150&auto=format&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80',
-  ];
 
   return (
     <div className="space-y-6 animate-in fade-in duration-200">
@@ -95,36 +131,77 @@ export const SettingsPage: React.FC = () => {
           <form onSubmit={handleSaveProfile} className="space-y-5">
             <div>
               <label className="block text-xs font-semibold text-finora-textPrimary mb-2">
-                Foto Profil
+                Foto Profil Anda
               </label>
-              <div className="flex items-center gap-4">
-                <img
-                  src={avatarUrl}
-                  alt="Avatar"
-                  className="w-16 h-16 rounded-full object-cover border-2 border-finora-primary/20 shadow-sm"
-                />
-                <div className="space-y-2">
-                  <div className="flex gap-2">
-                    {presetAvatars.map((url, i) => (
-                      <button
-                        key={i}
-                        type="button"
-                        onClick={() => setAvatarUrl(url)}
-                        className={`w-9 h-9 rounded-full overflow-hidden border-2 transition-all ${
-                          avatarUrl === url ? 'border-finora-primary scale-105 shadow' : 'border-slate-200'
-                        }`}
-                      >
-                        <img src={url} alt={`Preset ${i}`} className="w-full h-full object-cover" />
-                      </button>
-                    ))}
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4 p-4 rounded-xl border border-slate-200 bg-slate-50/60">
+                {/* Avatar Preview */}
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="relative group w-20 h-20 rounded-full overflow-hidden flex-shrink-0 border-2 border-finora-primary/30 hover:border-finora-primary transition-all focus:outline-none focus:ring-2 focus:ring-finora-primary/40 shadow-sm"
+                  title="Klik untuk memilih foto dari perangkat Anda"
+                  aria-label="Pilih foto profil"
+                >
+                  {avatarUrl ? (
+                    <img
+                      src={avatarUrl}
+                      alt="Avatar Pengguna"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-blue-100 text-finora-primary flex flex-col items-center justify-center font-bold text-2xl">
+                      {name.trim() ? name.trim().charAt(0).toUpperCase() : <Camera className="w-7 h-7 text-finora-primary/70" />}
+                    </div>
+                  )}
+
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
+                    <Camera className="w-6 h-6" />
                   </div>
+                </button>
+
+                {/* Actions & Guidance */}
+                <div className="flex-1 min-w-0 space-y-2">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={isProcessingAvatar}
+                      className="px-3.5 py-2 rounded-lg bg-white border border-slate-200 text-xs font-semibold text-finora-textPrimary hover:bg-slate-50 hover:border-slate-300 transition-all flex items-center gap-1.5 shadow-2xs disabled:opacity-60"
+                    >
+                      <Upload className="w-3.5 h-3.5 text-finora-primary" />
+                      <span>{avatarUrl ? 'Ganti Foto' : 'Unggah Foto dari Perangkat'}</span>
+                    </button>
+
+                    {avatarUrl && (
+                      <button
+                        type="button"
+                        onClick={handleRemoveAvatar}
+                        className="px-3 py-2 rounded-lg text-xs font-medium text-finora-red hover:bg-red-50 transition-colors flex items-center gap-1"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>Hapus Foto</span>
+                      </button>
+                    )}
+                  </div>
+
+                  <p className="text-xs text-slate-500 leading-normal">
+                    Pilih foto sendiri dari galeri atau berkas Anda (JPG, PNG, atau WebP). Foto otomatis dioptimalkan agar tersimpan aman di browser Anda.
+                  </p>
+
                   <input
-                    type="text"
-                    value={avatarUrl}
-                    onChange={(e) => setAvatarUrl(e.target.value)}
-                    placeholder="Atau tempel URL gambar avatar..."
-                    className="w-full px-3 py-1.5 text-xs rounded-lg border border-finora-border focus:outline-none focus:ring-1 focus:ring-finora-primary"
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/png,image/jpeg,image/jpg,image/webp"
+                    onChange={handleFileChange}
+                    className="hidden"
+                    aria-hidden="true"
                   />
+
+                  {avatarError && (
+                    <p className="text-xs text-finora-red font-medium">
+                      {avatarError}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -137,6 +214,7 @@ export const SettingsPage: React.FC = () => {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                placeholder="Masukkan nama Anda"
                 className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-btn border border-finora-border focus:outline-none focus:ring-2 focus:ring-finora-primary"
               />
             </div>
@@ -194,15 +272,21 @@ export const SettingsPage: React.FC = () => {
           <div className="p-4 rounded-xl border bg-slate-50 border-slate-200">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <img
-                  src={userProfile.avatarUrl}
-                  alt={userProfile.name}
-                  className="w-12 h-12 rounded-full object-cover border border-slate-200"
-                />
+                {userProfile.avatarUrl ? (
+                  <img
+                    src={userProfile.avatarUrl}
+                    alt={userProfile.name}
+                    className="w-12 h-12 rounded-full object-cover border border-slate-200"
+                  />
+                ) : (
+                  <div className="w-12 h-12 rounded-full bg-blue-100 text-finora-primary flex items-center justify-center font-bold text-lg border border-slate-200">
+                    {userProfile.name ? userProfile.name.charAt(0).toUpperCase() : <User className="w-6 h-6" />}
+                  </div>
+                )}
                 <div>
                   <div className="flex items-center gap-2">
                     <h4 className="text-base font-bold text-finora-textPrimary">
-                      {userProfile.name}
+                      {userProfile.name || 'Pengguna Finora'}
                     </h4>
                     <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
                       Sesi Aktif
@@ -239,13 +323,14 @@ export const SettingsPage: React.FC = () => {
               Pengelolaan Data & Reset
             </h4>
 
+            {/* Clear All Data */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3.5 rounded-xl border border-slate-200 bg-white gap-3">
               <div>
                 <p className="text-xs sm:text-sm font-semibold text-finora-textPrimary">
-                  Reset Semua Data ke Contoh Awal
+                  Bersihkan Semua Catatan Keuangan
                 </p>
                 <p className="text-xs text-slate-500">
-                  Mengembalikan transaksi, anggaran, dan tabungan ke data sampel dokumen Finora
+                  Mengosongkan seluruh riwayat transaksi, anggaran, dan tabungan agar benar-benar bersih
                 </p>
               </div>
               <Button
@@ -255,7 +340,29 @@ export const SettingsPage: React.FC = () => {
                 leftIcon={<RotateCcw className="w-3.5 h-3.5 text-slate-500" />}
                 onClick={() => setIsResetConfirmOpen(true)}
               >
-                Reset Data
+                Bersihkan Data
+              </Button>
+            </div>
+
+            {/* Load Sample Demo Data */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3.5 rounded-xl border border-slate-200 bg-white gap-3">
+              <div>
+                <p className="text-xs sm:text-sm font-semibold text-finora-textPrimary flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-finora-primary" />
+                  Muat Data Contoh (Opsional)
+                </p>
+                <p className="text-xs text-slate-500">
+                  Mengisi data transaksi dan anggaran simulasi untuk mencoba visualisasi laporan
+                </p>
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                leftIcon={<Sparkles className="w-3.5 h-3.5 text-finora-primary" />}
+                onClick={() => setIsSampleConfirmOpen(true)}
+              >
+                Muat Contoh
               </Button>
             </div>
           </div>
@@ -329,10 +436,23 @@ export const SettingsPage: React.FC = () => {
         isOpen={isResetConfirmOpen}
         onClose={() => setIsResetConfirmOpen(false)}
         onConfirm={resetAllData}
-        title="Reset Semua Data?"
-        message="Tindakan ini akan mengembalikan seluruh transaksi, anggaran, dan target tabungan ke nilai sampel awal. Apakah Anda yakin?"
-        confirmText="Ya, Reset Semua"
+        title="Bersihkan Semua Data?"
+        message="Tindakan ini akan mengosongkan seluruh catatan transaksi, anggaran, dan target tabungan Anda sehingga akun benar-benar bersih dari awal. Apakah Anda yakin?"
+        confirmText="Ya, Bersihkan Data"
         cancelText="Batal"
+        variant="danger"
+      />
+
+      {/* Confirm Load Sample Dialog */}
+      <ConfirmDialog
+        isOpen={isSampleConfirmOpen}
+        onClose={() => setIsSampleConfirmOpen(false)}
+        onConfirm={loadSampleData}
+        title="Muat Data Contoh?"
+        message="Aplikasi akan diisi dengan data transaksi dan anggaran simulasi untuk keperluan uji coba tampilan laporan dan grafik. Lanjutkan?"
+        confirmText="Ya, Muat Contoh"
+        cancelText="Batal"
+        variant="primary"
       />
 
       {/* Confirm Logout Dialog */}

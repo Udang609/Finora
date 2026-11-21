@@ -1,37 +1,50 @@
-import React, { useState } from 'react';
-import { Wallet, User, ArrowRight, ShieldCheck, Sparkles, Check } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Wallet, User, ArrowRight, ShieldCheck, Sparkles, Upload, Trash2, Camera } from 'lucide-react';
 import { useFinance } from '../../context/FinanceContext';
-
-const PRESET_AVATARS = [
-  {
-    id: 'avatar-1',
-    label: 'Pria Profesional',
-    url: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80',
-  },
-  {
-    id: 'avatar-2',
-    label: 'Wanita Kasual',
-    url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80',
-  },
-  {
-    id: 'avatar-3',
-    label: 'Pria Kasual',
-    url: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=150&auto=format&fit=crop&q=80',
-  },
-  {
-    id: 'avatar-4',
-    label: 'Wanita Profesional',
-    url: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80',
-  },
-];
+import { processAvatarFile } from '../../utils/imageHelper';
 
 export const LoginPage: React.FC = () => {
   const { userProfile, loginWithName } = useFinance();
   const [name, setName] = useState(userProfile.name || '');
-  const [selectedAvatar, setSelectedAvatar] = useState(
-    userProfile.avatarUrl || PRESET_AVATARS[0].url
-  );
+  const [customAvatar, setCustomAvatar] = useState(userProfile.avatarUrl || '');
   const [errorMessage, setErrorMessage] = useState('');
+  const [avatarError, setAvatarError] = useState('');
+  const [isProcessingAvatar, setIsProcessingAvatar] = useState(false);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setAvatarError('');
+    setIsProcessingAvatar(true);
+
+    try {
+      const dataUrl = await processAvatarFile(file);
+      setCustomAvatar(dataUrl);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setAvatarError(err.message);
+      } else {
+        setAvatarError('Gagal memproses foto. Silakan coba file lain.');
+      }
+    } finally {
+      setIsProcessingAvatar(false);
+      // Reset input agar bisa memilih file yang sama lagi bila perlu
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
+  const handleRemoveAvatar = () => {
+    setCustomAvatar('');
+    setAvatarError('');
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,8 +66,11 @@ export const LoginPage: React.FC = () => {
     }
 
     setErrorMessage('');
-    loginWithName(cleanName, selectedAvatar);
+    loginWithName(cleanName, customAvatar);
   };
+
+  // Hitung inisial nama untuk avatar fallback
+  const nameInitial = name.trim() ? name.trim().charAt(0).toUpperCase() : '';
 
   return (
     <div className="min-h-screen bg-finora-bg flex flex-col justify-center items-center px-4 py-8 sm:py-12 relative overflow-hidden">
@@ -89,7 +105,7 @@ export const LoginPage: React.FC = () => {
               Masuk Cukup Pakai Nama
             </h2>
             <p className="text-xs sm:text-sm text-finora-textSecondary mt-1 leading-relaxed">
-              Tanpa email, tanpa nomor HP, dan tanpa kata sandi. Cukup ketikkan nama Anda untuk memulai.
+              Tanpa email, tanpa nomor HP, dan tanpa kata sandi. Gunakan nama Anda sendiri untuk memulai.
             </p>
           </div>
 
@@ -100,11 +116,96 @@ export const LoginPage: React.FC = () => {
               <span className="font-semibold text-finora-textPrimary block mb-0.5">
                 Privasi 100% di Perangkat Anda
               </span>
-              Semua catatan keuangan dan pengaturan tersimpan aman di browser Anda tanpa perantara pihak ketiga.
+              Semua catatan pemasukan, pengeluaran, dan pengaturan tersimpan aman di browser Anda tanpa perantara server luar.
             </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+            {/* Custom Avatar Upload Section */}
+            <div>
+              <label className="block text-xs font-semibold text-finora-textPrimary mb-2">
+                Foto Avatar Sendiri (Opsional)
+              </label>
+
+              <div className="flex items-center gap-4 p-3 rounded-xl border border-slate-200 bg-slate-50/60">
+                {/* Avatar Preview / Clickable circle */}
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="relative group w-16 h-16 rounded-full overflow-hidden flex-shrink-0 border-2 border-finora-primary/30 hover:border-finora-primary transition-all focus:outline-none focus:ring-2 focus:ring-finora-primary/40"
+                  title="Klik untuk memilih foto dari perangkat Anda"
+                  aria-label="Pilih foto profil"
+                >
+                  {customAvatar ? (
+                    <img
+                      src={customAvatar}
+                      alt="Avatar pengguna"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-blue-100 text-finora-primary flex flex-col items-center justify-center">
+                      {nameInitial ? (
+                        <span className="text-xl font-bold">{nameInitial}</span>
+                      ) : (
+                        <Camera className="w-6 h-6 text-finora-primary/70" />
+                      )}
+                    </div>
+                  )}
+
+                  {/* Hover overlay hint */}
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
+                    <Camera className="w-5 h-5" />
+                  </div>
+                </button>
+
+                {/* Upload Action & Guidance */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={isProcessingAvatar}
+                      className="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs font-semibold text-finora-textPrimary hover:bg-slate-50 hover:border-slate-300 transition-all flex items-center gap-1.5 shadow-2xs disabled:opacity-60"
+                    >
+                      <Upload className="w-3.5 h-3.5 text-finora-primary" />
+                      <span>{customAvatar ? 'Ganti Foto' : 'Unggah Foto'}</span>
+                    </button>
+
+                    {customAvatar && (
+                      <button
+                        type="button"
+                        onClick={handleRemoveAvatar}
+                        className="px-2.5 py-1.5 rounded-lg text-xs font-medium text-finora-red hover:bg-red-50 transition-colors flex items-center gap-1"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>Hapus</span>
+                      </button>
+                    )}
+                  </div>
+
+                  <p className="text-[11px] text-slate-500 mt-1.5 leading-normal">
+                    Pilih foto sendiri dari galeri atau berkas Anda (JPG, PNG, atau WebP).
+                  </p>
+                </div>
+              </div>
+
+              {/* Hidden File Input */}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/png,image/jpeg,image/jpg,image/webp"
+                onChange={handleFileChange}
+                className="hidden"
+                aria-hidden="true"
+              />
+
+              {avatarError && (
+                <p className="text-xs text-finora-red mt-1.5 font-medium">
+                  {avatarError}
+                </p>
+              )}
+            </div>
+
             {/* Name Input */}
             <div>
               <label
@@ -126,7 +227,7 @@ export const LoginPage: React.FC = () => {
                     setName(e.target.value);
                     if (errorMessage) setErrorMessage('');
                   }}
-                  placeholder="Contoh: Dimas Pratama"
+                  placeholder="Contoh: Budi Santoso"
                   maxLength={50}
                   className={`w-full pl-10 pr-4 py-2.5 text-sm rounded-btn border text-finora-textPrimary placeholder-slate-400 focus:outline-none focus:ring-2 transition-all ${
                     errorMessage
@@ -142,43 +243,6 @@ export const LoginPage: React.FC = () => {
                   {errorMessage}
                 </p>
               )}
-            </div>
-
-            {/* Avatar Selector */}
-            <div>
-              <label className="block text-xs font-semibold text-finora-textPrimary mb-2">
-                Pilih Avatar (Opsional)
-              </label>
-              <div className="grid grid-cols-4 gap-2.5">
-                {PRESET_AVATARS.map((avatar) => {
-                  const isSelected = selectedAvatar === avatar.url;
-                  return (
-                    <button
-                      key={avatar.id}
-                      type="button"
-                      onClick={() => setSelectedAvatar(avatar.url)}
-                      className={`relative rounded-xl p-1 border-2 transition-all group flex flex-col items-center focus:outline-none focus:ring-2 focus:ring-finora-primary/30 ${
-                        isSelected
-                          ? 'border-finora-primary bg-blue-50/50 shadow-sm'
-                          : 'border-slate-200 hover:border-slate-300 bg-white'
-                      }`}
-                      aria-label={avatar.label}
-                      title={avatar.label}
-                    >
-                      <img
-                        src={avatar.url}
-                        alt={avatar.label}
-                        className="w-12 h-12 rounded-lg object-cover"
-                      />
-                      {isSelected && (
-                        <div className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-finora-primary text-white flex items-center justify-center shadow">
-                          <Check className="w-3 h-3 stroke-[3]" />
-                        </div>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
             </div>
 
             {/* Submit Button */}
@@ -200,7 +264,7 @@ export const LoginPage: React.FC = () => {
           </span>
           <span className="inline-flex items-center gap-1.5 bg-white/80 backdrop-blur-sm px-3 py-1.5 rounded-full border border-finora-border shadow-xs">
             <ShieldCheck className="w-3.5 h-3.5 text-finora-green" aria-hidden="true" />
-            Privat & Lokal
+            Privat & Bersih
           </span>
           <span className="inline-flex items-center gap-1.5 bg-white/80 backdrop-blur-sm px-3 py-1.5 rounded-full border border-finora-border shadow-xs">
             <Wallet className="w-3.5 h-3.5 text-blue-600" aria-hidden="true" />

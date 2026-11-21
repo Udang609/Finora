@@ -55,7 +55,7 @@ export const Topbar: React.FC = () => {
           title="Profil Pengguna & Pengaturan"
         >
           <span className="text-xs font-semibold text-finora-textPrimary max-w-[120px] truncate hidden sm:inline">
-            {userProfile.name}
+            {userProfile.name || 'Pengguna'}
           </span>
           {userProfile.avatarUrl ? (
             <img

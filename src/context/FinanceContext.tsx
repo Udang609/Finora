@@ -12,7 +12,10 @@ import {
   INITIAL_TRANSACTIONS, 
   INITIAL_BUDGETS, 
   INITIAL_SAVINGS_GOALS, 
-  INITIAL_USER_PROFILE 
+  INITIAL_USER_PROFILE,
+  SAMPLE_TRANSACTIONS,
+  SAMPLE_BUDGETS,
+  SAMPLE_SAVINGS_GOALS
 } from '../data/initialData';
 
 interface FinanceContextType {
@@ -29,6 +32,7 @@ interface FinanceContextType {
   userProfile: UserProfile;
   updateUserProfile: (data: Partial<UserProfile>) => void;
   resetAllData: () => void;
+  loadSampleData: () => void;
 
   // Transactions
   transactions: Transaction[];
@@ -87,23 +91,65 @@ export const FinanceProvider: React.FC<{ children: ReactNode }> = ({ children })
 
   const [userProfile, setUserProfile] = useState<UserProfile>(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.USER);
-    return saved ? JSON.parse(saved) : INITIAL_USER_PROFILE;
+    if (!saved) return INITIAL_USER_PROFILE;
+    try {
+      const parsed = JSON.parse(saved);
+      // Clean legacy placeholder profile if present
+      if (parsed.name === 'Dimas Pratama' && parsed.avatarUrl?.includes('unsplash')) {
+        localStorage.removeItem(STORAGE_KEYS.USER);
+        return INITIAL_USER_PROFILE;
+      }
+      return parsed;
+    } catch {
+      return INITIAL_USER_PROFILE;
+    }
   });
 
   // --- Core Financial Data ---
   const [transactions, setTransactions] = useState<Transaction[]>(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.TRANSACTIONS);
-    return saved ? JSON.parse(saved) : INITIAL_TRANSACTIONS;
+    if (!saved) return INITIAL_TRANSACTIONS;
+    try {
+      const parsed = JSON.parse(saved);
+      // Clean legacy template dummy data
+      if (Array.isArray(parsed) && parsed.some((t: Transaction) => t.id === 'tx-1' && t.title === 'Gaji Bulanan')) {
+        localStorage.removeItem(STORAGE_KEYS.TRANSACTIONS);
+        return [];
+      }
+      return parsed;
+    } catch {
+      return [];
+    }
   });
 
   const [budgets, setBudgets] = useState<Budget[]>(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.BUDGETS);
-    return saved ? JSON.parse(saved) : INITIAL_BUDGETS;
+    if (!saved) return INITIAL_BUDGETS;
+    try {
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed) && parsed.some((b: Budget) => b.id === 'bg-1' && b.category === 'Makanan & Minuman')) {
+        localStorage.removeItem(STORAGE_KEYS.BUDGETS);
+        return [];
+      }
+      return parsed;
+    } catch {
+      return [];
+    }
   });
 
   const [savingsGoals, setSavingsGoals] = useState<SavingsGoal[]>(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.SAVINGS);
-    return saved ? JSON.parse(saved) : INITIAL_SAVINGS_GOALS;
+    if (!saved) return INITIAL_SAVINGS_GOALS;
+    try {
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed) && parsed.some((s: SavingsGoal) => s.id === 'sg-1' && s.title === 'Membeli Laptop')) {
+        localStorage.removeItem(STORAGE_KEYS.SAVINGS);
+        return [];
+      }
+      return parsed;
+    } catch {
+      return [];
+    }
   });
 
   // --- UI Flow & Modals ---
@@ -274,10 +320,17 @@ export const FinanceProvider: React.FC<{ children: ReactNode }> = ({ children })
     const cleanName = name.trim();
     if (!cleanName) return;
 
+    // If new profile name or changing user, start with fresh empty data
+    if (userProfile.name && userProfile.name.toLowerCase() !== cleanName.toLowerCase()) {
+      setTransactions([]);
+      setBudgets([]);
+      setSavingsGoals([]);
+    }
+
     setUserProfile((prev) => ({
       ...prev,
       name: cleanName,
-      ...(avatarUrl ? { avatarUrl } : {}),
+      avatarUrl: avatarUrl || '',
     }));
     setIsLoggedIn(true);
     showToast(`Selamat datang di Finora, ${cleanName}!`, 'success');
@@ -294,11 +347,17 @@ export const FinanceProvider: React.FC<{ children: ReactNode }> = ({ children })
   };
 
   const resetAllData = () => {
-    setTransactions(INITIAL_TRANSACTIONS);
-    setBudgets(INITIAL_BUDGETS);
-    setSavingsGoals(INITIAL_SAVINGS_GOALS);
-    setUserProfile(INITIAL_USER_PROFILE);
-    showToast('Semua data berhasil di-reset ke nilai default.', 'info');
+    setTransactions([]);
+    setBudgets([]);
+    setSavingsGoals([]);
+    showToast('Semua catatan pemasukan, pengeluaran, anggaran, dan tabungan berhasil dibersihkan.', 'info');
+  };
+
+  const loadSampleData = () => {
+    setTransactions(SAMPLE_TRANSACTIONS);
+    setBudgets(SAMPLE_BUDGETS);
+    setSavingsGoals(SAMPLE_SAVINGS_GOALS);
+    showToast('Data contoh berhasil dimuat untuk mencoba fitur.', 'success');
   };
 
   return (
@@ -314,6 +373,7 @@ export const FinanceProvider: React.FC<{ children: ReactNode }> = ({ children })
         userProfile,
         updateUserProfile,
         resetAllData,
+        loadSampleData,
         transactions,
         addTransaction,
         updateTransaction,

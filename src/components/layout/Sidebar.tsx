@@ -9,7 +9,8 @@ import {
   Settings, 
   ChevronDown, 
   ChevronRight, 
-  Plus
+  Plus,
+  User
 } from 'lucide-react';
 import { useFinance } from '../../context/FinanceContext';
 import type { ActivePage } from '../../types';
@@ -171,13 +172,19 @@ export const Sidebar: React.FC = () => {
           onClick={() => setActivePage('settings')}
           className="flex items-center gap-3 p-2 rounded-xl hover:bg-white/10 transition-colors cursor-pointer"
         >
-          <img
-            src={userProfile.avatarUrl}
-            alt={userProfile.name}
-            className="w-9 h-9 rounded-full object-cover border border-white/20"
-          />
+          {userProfile.avatarUrl ? (
+            <img
+              src={userProfile.avatarUrl}
+              alt={userProfile.name}
+              className="w-9 h-9 rounded-full object-cover border border-white/20"
+            />
+          ) : (
+            <div className="w-9 h-9 rounded-full bg-white/10 text-white flex items-center justify-center font-bold text-xs border border-white/20">
+              {userProfile.name ? userProfile.name.charAt(0).toUpperCase() : <User className="w-4 h-4" />}
+            </div>
+          )}
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-semibold text-white truncate">{userProfile.name}</p>
+            <p className="text-xs font-semibold text-white truncate">{userProfile.name || 'Pengguna Finora'}</p>
             <p className="text-[10px] text-slate-400 truncate">Finora Personal</p>
           </div>
         </div>

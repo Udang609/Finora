@@ -1,15 +1,19 @@
 import type { Transaction, Budget, SavingsGoal, UserProfile } from '../types';
 
 export const INITIAL_USER_PROFILE: UserProfile = {
-  name: 'Dimas Pratama',
-  avatarUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80',
+  name: '',
+  avatarUrl: '',
   currency: 'IDR',
   dateFormat: 'DD MMMM YYYY',
   theme: 'light',
   isCompactView: false,
 };
 
-export const INITIAL_TRANSACTIONS: Transaction[] = [
+export const INITIAL_TRANSACTIONS: Transaction[] = [];
+export const INITIAL_BUDGETS: Budget[] = [];
+export const INITIAL_SAVINGS_GOALS: SavingsGoal[] = [];
+
+export const SAMPLE_TRANSACTIONS: Transaction[] = [
   {
     id: 'tx-1',
     title: 'Gaji Bulanan',
@@ -112,7 +116,7 @@ export const INITIAL_TRANSACTIONS: Transaction[] = [
   },
 ];
 
-export const INITIAL_BUDGETS: Budget[] = [
+export const SAMPLE_BUDGETS: Budget[] = [
   {
     id: 'bg-1',
     category: 'Makanan & Minuman',
@@ -136,7 +140,7 @@ export const INITIAL_BUDGETS: Budget[] = [
   },
 ];
 
-export const INITIAL_SAVINGS_GOALS: SavingsGoal[] = [
+export const SAMPLE_SAVINGS_GOALS: SavingsGoal[] = [
   {
     id: 'sg-1',
     title: 'Membeli Laptop',

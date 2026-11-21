@@ -74,35 +74,41 @@ export const BudgetOverviewWidget: React.FC = () => {
         </div>
 
         {/* Category breakdown items */}
-        <div className="space-y-3">
-          {currentBudgets.slice(0, 3).map((item) => {
-            const spent = getSpentByCategory(item.category, currentMonth, currentYear);
-            const percent = item.amount > 0 ? Math.round((spent / item.amount) * 100) : 0;
-            const statusColor =
-              percent >= 100
-                ? 'bg-finora-red'
-                : percent >= 75
-                ? 'bg-finora-orange'
-                : 'bg-finora-green';
+        {currentBudgets.length === 0 ? (
+          <p className="text-xs text-slate-400 text-center py-4">
+            Belum ada anggaran untuk bulan ini. Klik &quot;Kelola&quot; untuk menambahkan anggaran pertama Anda.
+          </p>
+        ) : (
+          <div className="space-y-3">
+            {currentBudgets.slice(0, 3).map((item) => {
+              const spent = getSpentByCategory(item.category, currentMonth, currentYear);
+              const percent = item.amount > 0 ? Math.round((spent / item.amount) * 100) : 0;
+              const statusColor =
+                percent >= 100
+                  ? 'bg-finora-red'
+                  : percent >= 75
+                  ? 'bg-finora-orange'
+                  : 'bg-finora-green';
 
-            return (
-              <div key={item.id} className="text-xs">
-                <div className="flex justify-between items-center mb-1">
-                  <span className="font-medium text-finora-textPrimary truncate">{item.category}</span>
-                  <span className="text-slate-500 font-medium">
-                    {formatIDR(spent)} / {formatIDR(item.amount)}
-                  </span>
+              return (
+                <div key={item.id} className="text-xs">
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="font-medium text-finora-textPrimary truncate">{item.category}</span>
+                    <span className="text-slate-500 font-medium">
+                      {formatIDR(spent)} / {formatIDR(item.amount)}
+                    </span>
+                  </div>
+                  <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                    <div
+                      className={`h-full rounded-full transition-all duration-300 ${statusColor}`}
+                      style={{ width: `${Math.min(100, percent)}%` }}
+                    />
+                  </div>
                 </div>
-                <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
-                  <div
-                    className={`h-full rounded-full transition-all duration-300 ${statusColor}`}
-                    style={{ width: `${Math.min(100, percent)}%` }}
-                  />
-                </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       <div className="pt-4 border-t border-slate-100 mt-4 text-center">
