@@ -67,7 +67,7 @@ Finora memecahkan masalah ini dengan:
 
 ### 6. Kalkulator Keuangan Terpadu
 - Kalkulator numerik dengan keypad responsif (`0-9`, `00`, `.`, `+`, `-`, `×`, `÷`, `%`).
-- Preset hitung **Diskon Cepat** (10%, 20%, 30%, 50%).
+- Input persentase **Diskon Sendiri** sesuai kebutuhan, lalu terapkan langsung ke nominal.
 - Fitur **"Gunakan untuk Transaksi"**: Otomatis mentransfer hasil hitungan ke modal transaksi baru tanpa perlu menyalin manual.
 
 ### 7. Pengaturan & Aksesibilitas

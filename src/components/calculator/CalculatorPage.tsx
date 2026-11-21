@@ -3,7 +3,8 @@ import {
   Delete, 
   ArrowRightCircle, 
   Percent, 
-  Tag 
+  Tag,
+  Trash2
 } from 'lucide-react';
 import { useFinance } from '../../context/FinanceContext';
 import { formatIDR } from '../../utils/formatters';
@@ -15,7 +16,10 @@ export const CalculatorPage: React.FC = () => {
   const [expression, setExpression] = useState('');
   const [displayResult, setDisplayResult] = useState('0');
   const [isCalculated, setIsCalculated] = useState(false);
-  const [discountPercent, setDiscountPercent] = useState<number | null>(null);
+  const [appliedDiscount, setAppliedDiscount] = useState<number | null>(null);
+  const [discountInput, setDiscountInput] = useState('');
+  const [discountError, setDiscountError] = useState('');
+  const [discountBase, setDiscountBase] = useState<number | null>(null);
 
   const handleInput = (val: string) => {
     if (isCalculated) {
@@ -57,7 +61,10 @@ export const CalculatorPage: React.FC = () => {
     setExpression('');
     setDisplayResult('0');
     setIsCalculated(false);
-    setDiscountPercent(null);
+    setAppliedDiscount(null);
+    setDiscountInput('');
+    setDiscountError('');
+    setDiscountBase(null);
   };
 
   const handleDelete = () => {
@@ -98,15 +105,42 @@ export const CalculatorPage: React.FC = () => {
     }
   };
 
-  const handleApplyDiscount = (pct: number) => {
-    setDiscountPercent(pct);
-    const currentVal = Number(displayResult) || Number(expression) || 0;
-    if (currentVal > 0) {
-      const finalPrice = Math.round(currentVal * ((100 - pct) / 100));
-      setExpression(`${currentVal} × (100% - ${pct}%)`);
-      setDisplayResult(finalPrice.toString());
-      setIsCalculated(true);
+  const handleApplyDiscount = () => {
+    const pct = Number(discountInput.replace(',', '.'));
+
+    if (!discountInput.trim() || Number.isNaN(pct) || pct <= 0 || pct > 100) {
+      setDiscountError('Masukkan angka diskon antara 1 sampai 100.');
+      return;
     }
+
+    const currentVal = Number(displayResult) || Number(expression) || 0;
+    const base = discountBase ?? currentVal;
+
+    if (base <= 0) {
+      setDiscountError('Masukkan nominal harga terlebih dahulu, lalu terapkan diskon.');
+      return;
+    }
+
+    setDiscountError('');
+    setDiscountBase(base);
+    setAppliedDiscount(pct);
+
+    const finalPrice = Math.round(base * ((100 - pct) / 100));
+    setExpression(`${base} × (100% - ${pct}%)`);
+    setDisplayResult(finalPrice.toString());
+    setIsCalculated(true);
+  };
+
+  const handleClearDiscount = () => {
+    setAppliedDiscount(null);
+    setDiscountInput('');
+    setDiscountError('');
+    if (discountBase !== null) {
+      setExpression(String(discountBase));
+      setDisplayResult(String(discountBase));
+      setIsCalculated(false);
+    }
+    setDiscountBase(null);
   };
 
   const handleUseInTransaction = () => {
@@ -142,28 +176,77 @@ export const CalculatorPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Quick Discount Presets */}
-        <div className="flex items-center justify-between gap-1 mb-4 bg-slate-50 p-2 rounded-xl border border-slate-100">
-          <span className="text-[11px] font-semibold text-slate-500 pl-1 flex items-center gap-1">
-            <Tag className="w-3.5 h-3.5 text-finora-orange" />
-            Diskon:
-          </span>
-          <div className="flex gap-1.5">
-            {[10, 20, 30, 50].map((d) => (
-              <button
-                key={d}
-                type="button"
-                onClick={() => handleApplyDiscount(d)}
-                className={`text-xs font-semibold px-2 py-1 rounded-lg transition-colors ${
-                  discountPercent === d
-                    ? 'bg-finora-orange text-white'
-                    : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'
-                }`}
-              >
-                {d}%
-              </button>
-            ))}
+        {/* Custom Discount Calculator */}
+        <div className="mb-4 p-3 bg-slate-50 rounded-xl border border-slate-100">
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <span className="text-[11px] font-semibold text-slate-600 flex items-center gap-1.5">
+              <Tag className="w-3.5 h-3.5 text-finora-orange" />
+              Hitung Diskon Sendiri
+            </span>
+            {appliedDiscount !== null && (
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-orange-100 text-orange-800">
+                Diskon {appliedDiscount}% aktif
+              </span>
+            )}
           </div>
+
+          <div className="flex items-center gap-2">
+            <div className="relative flex-1">
+              <input
+                type="number"
+                inputMode="decimal"
+                min={1}
+                max={100}
+                value={discountInput}
+                onChange={(e) => {
+                  setDiscountInput(e.target.value);
+                  if (discountError) setDiscountError('');
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleApplyDiscount();
+                  }
+                }}
+                placeholder="Contoh: 15"
+                className="w-full pl-3 pr-8 py-2 text-sm rounded-lg border border-slate-200 bg-white text-finora-textPrimary placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-finora-orange/30 focus:border-finora-orange transition-all"
+                aria-label="Persentase diskon"
+              />
+              <span className="absolute inset-y-0 right-0 pr-3 flex items-center text-xs font-semibold text-slate-400 pointer-events-none">
+                %
+              </span>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleApplyDiscount}
+              className="px-3.5 py-2 rounded-lg bg-finora-orange hover:bg-amber-600 text-white text-xs font-bold transition-colors shadow-sm whitespace-nowrap"
+            >
+              Terapkan
+            </button>
+
+            {appliedDiscount !== null && (
+              <button
+                type="button"
+                onClick={handleClearDiscount}
+                className="p-2 rounded-lg text-slate-500 hover:bg-slate-200 transition-colors"
+                title="Hapus diskon"
+                aria-label="Hapus diskon"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+
+          {discountError && (
+            <p className="text-[11px] text-finora-red font-medium mt-1.5">{discountError}</p>
+          )}
+
+          {appliedDiscount !== null && discountBase !== null && (
+            <p className="text-[11px] text-slate-500 mt-1.5">
+              Harga awal {formatIDR(discountBase)} dipotong {appliedDiscount}% menjadi {formatIDR(Number(displayResult) || 0)}.
+            </p>
+          )}
         </div>
 
         {/* Keypad Grid */}

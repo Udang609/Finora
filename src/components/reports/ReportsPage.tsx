@@ -24,8 +24,117 @@ import {
 } from 'lucide-react';
 import { useFinance } from '../../context/FinanceContext';
 import { formatIDR } from '../../utils/formatters';
+import type { Transaction } from '../../types';
 
 type ReportPeriod = 'today' | 'week' | 'month' | 'year' | 'custom';
+
+const DAY_MS = 86400000;
+
+const parseISODate = (value: string) => {
+  const [y, m, d] = value.split('-').map(Number);
+  return new Date(Date.UTC(y, m - 1, d));
+};
+
+interface ChartBucket {
+  name: string;
+  Pemasukan: number;
+  Pengeluaran: number;
+}
+
+const buildBarChartData = (
+  transactions: Transaction[],
+  period: ReportPeriod,
+  customStartDate: string,
+  customEndDate: string
+): ChartBucket[] => {
+  let buckets: ChartBucket[] = [];
+
+  if (period === 'today') {
+    buckets = [{ name: 'Hari Ini', Pemasukan: 0, Pengeluaran: 0 }];
+    transactions.forEach((tx) => {
+      if (tx.type === 'income') buckets[0].Pemasukan += tx.amount;
+      else buckets[0].Pengeluaran += tx.amount;
+    });
+    return buckets;
+  }
+
+  if (period === 'week') {
+    const start = parseISODate('2026-11-15');
+    const dayNames = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+    buckets = Array.from({ length: 7 }, (_, i) => {
+      const date = new Date(start.getTime() + i * DAY_MS);
+      return { name: dayNames[date.getUTCDay()], Pemasukan: 0, Pengeluaran: 0 };
+    });
+    transactions.forEach((tx) => {
+      const offset = Math.floor((parseISODate(tx.date).getTime() - start.getTime()) / DAY_MS);
+      if (offset >= 0 && offset < 7) {
+        if (tx.type === 'income') buckets[offset].Pemasukan += tx.amount;
+        else buckets[offset].Pengeluaran += tx.amount;
+      }
+    });
+    return buckets;
+  }
+
+  if (period === 'month') {
+    buckets = Array.from({ length: 5 }, (_, i) => ({
+      name: `Minggu ${i + 1}`,
+      Pemasukan: 0,
+      Pengeluaran: 0,
+    }));
+    transactions.forEach((tx) => {
+      const day = Number(tx.date.substring(8, 10));
+      const index = Math.min(4, Math.floor((day - 1) / 7));
+      if (tx.type === 'income') buckets[index].Pemasukan += tx.amount;
+      else buckets[index].Pengeluaran += tx.amount;
+    });
+    return buckets;
+  }
+
+  if (period === 'year') {
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+    buckets = monthNames.map((name) => ({ name, Pemasukan: 0, Pengeluaran: 0 }));
+    transactions.forEach((tx) => {
+      const index = Number(tx.date.substring(5, 7)) - 1;
+      if (index >= 0 && index < 12) {
+        if (tx.type === 'income') buckets[index].Pemasukan += tx.amount;
+        else buckets[index].Pengeluaran += tx.amount;
+      }
+    });
+    return buckets;
+  }
+
+  // Custom range: bagi menjadi kelompok 7 hari
+  const start = parseISODate(customStartDate);
+  const end = parseISODate(customEndDate);
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime()) || end < start) {
+    return [];
+  }
+
+  const totalDays = Math.floor((end.getTime() - start.getTime()) / DAY_MS) + 1;
+  const groupCount = Math.max(1, Math.ceil(totalDays / 7));
+  buckets = Array.from({ length: groupCount }, (_, i) => {
+    const offsetStart = i * 7;
+    const offsetEnd = Math.min(offsetStart + 6, totalDays - 1);
+    const d1 = new Date(start.getTime() + offsetStart * DAY_MS);
+    const d2 = new Date(start.getTime() + offsetEnd * DAY_MS);
+    const label = (date: Date) =>
+      `${String(date.getUTCDate()).padStart(2, '0')}/${String(date.getUTCMonth() + 1).padStart(2, '0')}`;
+    return {
+      name: `${label(d1)} - ${label(d2)}`,
+      Pemasukan: 0,
+      Pengeluaran: 0,
+    };
+  });
+  transactions.forEach((tx) => {
+    const offset = Math.floor((parseISODate(tx.date).getTime() - start.getTime()) / DAY_MS);
+    const index = Math.floor(offset / 7);
+    if (index >= 0 && index < buckets.length) {
+      if (tx.type === 'income') buckets[index].Pemasukan += tx.amount;
+      else buckets[index].Pengeluaran += tx.amount;
+    }
+  });
+  return buckets;
+};
 
 export const ReportsPage: React.FC = () => {
   const { transactions } = useFinance();
@@ -100,16 +209,17 @@ export const ReportsPage: React.FC = () => {
   const topExpenseCategory = expenseByCategory[0] || null;
   const topIncomeCategory = incomeByCategory[0] || null;
 
-  // Chart data: daily/weekly breakdown or monthly comparison
-  const barChartData = useMemo(() => {
-    // Generate comparison data
-    return [
-      { name: 'Minggu 1', Pemasukan: 1000000, Pengeluaran: 1000000 },
-      { name: 'Minggu 2', Pemasukan: 0, Pengeluaran: 980000 },
-      { name: 'Minggu 3', Pemasukan: 2500000, Pengeluaran: 730000 },
-      { name: 'Minggu 4', Pemasukan: 10000000, Pengeluaran: 45000 },
-    ];
-  }, []);
+  // Chart data: dihitung dari transaksi nyata sesuai periode terpilih
+  const barChartData = buildBarChartData(
+    filteredTransactions,
+    period,
+    customStartDate,
+    customEndDate
+  );
+
+  const hasBarChartData = barChartData.some(
+    (bucket) => bucket.Pemasukan > 0 || bucket.Pengeluaran > 0
+  );
 
   const PIE_COLORS = [
     '#2563EB', '#16A34A', '#F59E0B', '#DC2626', 
@@ -251,27 +361,41 @@ export const ReportsPage: React.FC = () => {
             </p>
           </div>
 
-          <div className="h-64 sm:h-72 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={barChartData} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#64748B', fontSize: 11 }} />
-                <YAxis
-                  axisLine={false}
-                  tickLine={false}
-                  tick={{ fill: '#64748B', fontSize: 11 }}
-                  tickFormatter={(val) => `${val / 1000000} jt`}
-                />
-                <Tooltip
-                  formatter={(value: any) => [formatIDR(Number(value)), '']}
-                  contentStyle={{ backgroundColor: '#fff', borderRadius: '12px', border: '1px solid #E2E8F0', fontSize: '12px' }}
-                />
-                <Legend verticalAlign="top" align="right" iconType="circle" wrapperStyle={{ paddingBottom: '10px', fontSize: '12px' }} />
-                <Bar dataKey="Pemasukan" fill="#16A34A" radius={[6, 6, 0, 0]} maxBarSize={30} />
-                <Bar dataKey="Pengeluaran" fill="#DC2626" radius={[6, 6, 0, 0]} maxBarSize={30} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+          {!hasBarChartData ? (
+            <div className="h-64 sm:h-72 w-full flex flex-col items-center justify-center text-center p-6 bg-slate-50/60 rounded-xl border border-dashed border-slate-200">
+              <div className="w-12 h-12 rounded-full bg-blue-50 text-finora-primary flex items-center justify-center mb-3">
+                <TrendingUp className="w-6 h-6" />
+              </div>
+              <h4 className="text-sm font-semibold text-finora-textPrimary">
+                Belum Ada Data Arus Kas
+              </h4>
+              <p className="text-xs text-finora-textSecondary mt-1 max-w-xs leading-relaxed">
+                Grafik akan terisi otomatis setelah ada transaksi pemasukan atau pengeluaran pada periode ini.
+              </p>
+            </div>
+          ) : (
+            <div className="h-64 sm:h-72 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={barChartData} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#64748B', fontSize: 11 }} />
+                  <YAxis
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fill: '#64748B', fontSize: 11 }}
+                    tickFormatter={(val) => (val === 0 ? '0' : `${val / 1000000} jt`)}
+                  />
+                  <Tooltip
+                    formatter={(value: any) => [formatIDR(Number(value)), '']}
+                    contentStyle={{ backgroundColor: '#fff', borderRadius: '12px', border: '1px solid #E2E8F0', fontSize: '12px' }}
+                  />
+                  <Legend verticalAlign="top" align="right" iconType="circle" wrapperStyle={{ paddingBottom: '10px', fontSize: '12px' }} />
+                  <Bar dataKey="Pemasukan" fill="#16A34A" radius={[6, 6, 0, 0]} maxBarSize={30} />
+                  <Bar dataKey="Pengeluaran" fill="#DC2626" radius={[6, 6, 0, 0]} maxBarSize={30} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          )}
         </div>
 
         {/* Expense by Category Pie / Donut Chart */}
