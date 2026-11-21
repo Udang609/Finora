@@ -2,7 +2,6 @@ import type { Transaction, Budget, SavingsGoal, UserProfile } from '../types';
 
 export const INITIAL_USER_PROFILE: UserProfile = {
   name: 'Dimas Pratama',
-  email: 'dimas.pratama@example.com',
   avatarUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80',
   currency: 'IDR',
   dateFormat: 'DD MMMM YYYY',

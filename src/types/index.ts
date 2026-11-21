@@ -44,11 +44,8 @@ export interface SavingsGoal {
   createdAt: string;
 }
 
-export type AccessMode = 'guest' | 'account';
-
 export interface UserProfile {
   name: string;
-  email: string;
   avatarUrl: string;
   currency: string; // 'IDR'
   dateFormat: string; // 'DD MMMM YYYY'

@@ -9,9 +9,7 @@ import {
   Settings, 
   ChevronDown, 
   ChevronRight, 
-  Plus, 
-  ShieldCheck,
-  UserCheck
+  Plus
 } from 'lucide-react';
 import { useFinance } from '../../context/FinanceContext';
 import type { ActivePage } from '../../types';
@@ -21,7 +19,6 @@ export const Sidebar: React.FC = () => {
     activePage, 
     setActivePage, 
     openAddTransactionWithAmount,
-    accessMode,
     userProfile 
   } = useFinance();
 
@@ -168,7 +165,7 @@ export const Sidebar: React.FC = () => {
         })}
       </nav>
 
-      {/* User Status / Mode Footer */}
+      {/* User Profile Footer */}
       <div className="p-4 border-t border-white/10 bg-slate-900/40">
         <div 
           onClick={() => setActivePage('settings')}
@@ -181,17 +178,7 @@ export const Sidebar: React.FC = () => {
           />
           <div className="flex-1 min-w-0">
             <p className="text-xs font-semibold text-white truncate">{userProfile.name}</p>
-            <div className="flex items-center gap-1.5 mt-0.5">
-              {accessMode === 'guest' ? (
-                <span className="inline-flex items-center gap-1 text-[10px] text-amber-300 font-medium">
-                  <ShieldCheck className="w-3 h-3" /> Guest Mode
-                </span>
-              ) : (
-                <span className="inline-flex items-center gap-1 text-[10px] text-emerald-300 font-medium">
-                  <UserCheck className="w-3 h-3" /> Account Mode
-                </span>
-              )}
-            </div>
+            <p className="text-[10px] text-slate-400 truncate">Finora Personal</p>
           </div>
         </div>
       </div>

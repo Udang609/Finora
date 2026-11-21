@@ -4,7 +4,6 @@ import type {
   Budget, 
   SavingsGoal, 
   UserProfile, 
-  AccessMode, 
   ActivePage, 
   ToastMessage,
   Category
@@ -23,12 +22,12 @@ interface FinanceContextType {
   globalSearchQuery: string;
   setGlobalSearchQuery: (query: string) => void;
 
-  // Access Mode & User Profile
-  accessMode: AccessMode;
-  setAccessMode: (mode: AccessMode) => void;
+  // Authentication & User Profile
+  isLoggedIn: boolean;
+  loginWithName: (name: string, avatarUrl?: string) => void;
+  logout: () => void;
   userProfile: UserProfile;
   updateUserProfile: (data: Partial<UserProfile>) => void;
-  migrateGuestToAccount: () => void;
   resetAllData: () => void;
 
   // Transactions
@@ -77,14 +76,13 @@ const STORAGE_KEYS = {
   BUDGETS: 'finora_budgets_v1',
   SAVINGS: 'finora_savings_v1',
   USER: 'finora_user_v1',
-  ACCESS_MODE: 'finora_access_mode_v1',
+  IS_LOGGED_IN: 'finora_is_logged_in_v1',
 };
 
 export const FinanceProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  // --- Access Mode & Profile ---
-  const [accessMode, setAccessModeState] = useState<AccessMode>(() => {
-    const saved = localStorage.getItem(STORAGE_KEYS.ACCESS_MODE);
-    return saved === 'account' ? 'account' : 'guest';
+  // --- Auth & User Profile ---
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
+    return localStorage.getItem(STORAGE_KEYS.IS_LOGGED_IN) === 'true';
   });
 
   const [userProfile, setUserProfile] = useState<UserProfile>(() => {
@@ -134,8 +132,8 @@ export const FinanceProvider: React.FC<{ children: ReactNode }> = ({ children })
   }, [userProfile]);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.ACCESS_MODE, accessMode);
-  }, [accessMode]);
+    localStorage.setItem(STORAGE_KEYS.IS_LOGGED_IN, isLoggedIn ? 'true' : 'false');
+  }, [isLoggedIn]);
 
   // Toast Helper
   const showToast = (message: string, type: 'success' | 'error' | 'info' = 'success') => {
@@ -271,10 +269,23 @@ export const FinanceProvider: React.FC<{ children: ReactNode }> = ({ children })
     showToast('Target tabungan berhasil dihapus.', 'info');
   };
 
-  // Settings & Modes
-  const setAccessMode = (mode: AccessMode) => {
-    setAccessModeState(mode);
-    showToast(`Beralih ke mode ${mode === 'account' ? 'Akun' : 'Guest'}.`, 'info');
+  // Auth & Settings
+  const loginWithName = (name: string, avatarUrl?: string) => {
+    const cleanName = name.trim();
+    if (!cleanName) return;
+
+    setUserProfile((prev) => ({
+      ...prev,
+      name: cleanName,
+      ...(avatarUrl ? { avatarUrl } : {}),
+    }));
+    setIsLoggedIn(true);
+    showToast(`Selamat datang di Finora, ${cleanName}!`, 'success');
+  };
+
+  const logout = () => {
+    setIsLoggedIn(false);
+    showToast('Berhasil keluar dari sesi.', 'info');
   };
 
   const updateUserProfile = (data: Partial<UserProfile>) => {
@@ -282,17 +293,11 @@ export const FinanceProvider: React.FC<{ children: ReactNode }> = ({ children })
     showToast('Profil pengguna berhasil disimpan.', 'success');
   };
 
-  const migrateGuestToAccount = () => {
-    setAccessModeState('account');
-    showToast('Data Guest berhasil disinkronkan ke Mode Akun!', 'success');
-  };
-
   const resetAllData = () => {
     setTransactions(INITIAL_TRANSACTIONS);
     setBudgets(INITIAL_BUDGETS);
     setSavingsGoals(INITIAL_SAVINGS_GOALS);
     setUserProfile(INITIAL_USER_PROFILE);
-    setAccessModeState('guest');
     showToast('Semua data berhasil di-reset ke nilai default.', 'info');
   };
 
@@ -303,11 +308,11 @@ export const FinanceProvider: React.FC<{ children: ReactNode }> = ({ children })
         setActivePage,
         globalSearchQuery,
         setGlobalSearchQuery,
-        accessMode,
-        setAccessMode,
+        isLoggedIn,
+        loginWithName,
+        logout,
         userProfile,
         updateUserProfile,
-        migrateGuestToAccount,
         resetAllData,
         transactions,
         addTransaction,

@@ -20,8 +20,8 @@ Banyak orang kesulitan mengetahui ke mana perginya uang mereka setiap akhir bula
 
 ### 💡 Solusi Finora
 Finora memecahkan masalah ini dengan:
-1. **Akses Instan (Guest Mode):** Langsung catat keuangan tanpa wajib mendaftar akun. Semua data tersimpan aman di browser lokal Anda.
-2. **Kesiapan Akun (Account Mode):** Fleksibilitas untuk bermigrasi dari Guest Mode ke akun terdaftar kapan saja tanpa kehilangan riwayat data.
+1. **Login Cepat Cukup Pakai Nama:** Langsung masuk dan kelola keuangan hanya dengan memasukkan nama. Tanpa email, tanpa nomor HP, dan tanpa kata sandi.
+2. **Privasi 100% Lokal:** Seluruh data keuangan tersimpan aman di browser lokal Anda tanpa dikirim ke server pihak ketiga.
 3. **Format Asli Rupiah (IDR):** Seluruh nominal disajikan dengan pemisah ribuan standar Indonesia (`Rp10.000.000`).
 4. **Kontrol Proaktif (Smart Budgeting):** Peringatan dini 3 status sebelum pengeluaran melampaui batas anggaran.
 5. **Kalkulator Terintegrasi:** Hitung diskon belanja dan persentase, lalu masukkan langsung ke form transaksi dengan satu klik.
@@ -71,9 +71,9 @@ Finora memecahkan masalah ini dengan:
 - Fitur **"Gunakan untuk Transaksi"**: Otomatis mentransfer hasil hitungan ke modal transaksi baru tanpa perlu menyalin manual.
 
 ### 7. Pengaturan & Aksesibilitas
-- **Guest Mode vs Account Mode:** Bebas memilih cara penggunaan.
-- Pengaturan profil: Nama, Email, dan pilihan Avatar.
-- Opsi **Migrasi Data Guest ke Akun**.
+- **Login Privat Pakai Nama:** Masuk cepat tanpa email atau nomor HP.
+- Pengaturan profil: Nama pengguna dan pilihan Avatar.
+- Opsi **Keluar / Ganti Pengguna:** Kembali ke layar login dengan data lokal tetap terlindungi.
 - Opsi **Reset Data:** Mengembalikan data ke konfigurasi sampel bawaan dokumen spesifikasi.
 
 ---

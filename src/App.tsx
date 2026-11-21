@@ -6,6 +6,7 @@ import { BottomNav } from './components/layout/BottomNav';
 import { ToastContainer } from './components/common/Toast';
 import { InstallBanner } from './components/common/InstallBanner';
 import { TransactionModal } from './components/transactions/TransactionModal';
+import { LoginPage } from './components/auth/LoginPage';
 
 // Pages
 import { DashboardPage } from './components/dashboard/DashboardPage';
@@ -86,10 +87,25 @@ const MainLayout: React.FC = () => {
   );
 };
 
+const AppContent: React.FC = () => {
+  const { isLoggedIn } = useFinance();
+
+  if (!isLoggedIn) {
+    return (
+      <>
+        <LoginPage />
+        <ToastContainer />
+      </>
+    );
+  }
+
+  return <MainLayout />;
+};
+
 export function App() {
   return (
     <FinanceProvider>
-      <MainLayout />
+      <AppContent />
     </FinanceProvider>
   );
 }

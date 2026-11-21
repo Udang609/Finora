@@ -63,6 +63,6 @@ jobs:
 
             - APK Android (debug build) siap dipasang di perangkat.
             - Dashboard, transaksi, anggaran, tabungan, laporan, kalkulator, pengaturan.
-            - Guest Mode & Account Mode.
+            - Login privat pakai nama (tanpa email atau nomor HP).
           files: android/app/build/outputs/apk/debug/app-debug.apk
           fail_on_unmatched_files: true

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, Plus, User, ShieldCheck, UserCheck, Calendar } from 'lucide-react';
+import { Search, Plus, User, Calendar } from 'lucide-react';
 import { useFinance } from '../../context/FinanceContext';
 import { formatDateID } from '../../utils/formatters';
 
@@ -8,7 +8,6 @@ export const Topbar: React.FC = () => {
     globalSearchQuery, 
     setGlobalSearchQuery, 
     openAddTransactionWithAmount,
-    accessMode,
     userProfile,
     setActivePage
   } = useFinance();
@@ -39,29 +38,6 @@ export const Topbar: React.FC = () => {
           <span className="font-medium">{formatDateID(todayStr)}</span>
         </div>
 
-        {/* Mode Badge */}
-        <button
-          onClick={() => setActivePage('settings')}
-          className={`flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-lg font-medium transition-colors border ${
-            accessMode === 'guest'
-              ? 'bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100'
-              : 'bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100'
-          }`}
-          title="Klik untuk pengaturan akun"
-        >
-          {accessMode === 'guest' ? (
-            <>
-              <ShieldCheck className="w-3.5 h-3.5 text-amber-600" />
-              <span>Guest</span>
-            </>
-          ) : (
-            <>
-              <UserCheck className="w-3.5 h-3.5 text-emerald-600" />
-              <span>Akun</span>
-            </>
-          )}
-        </button>
-
         {/* Quick Add Button (Mobile/Tablet) */}
         <button
           onClick={() => openAddTransactionWithAmount()}
@@ -72,21 +48,24 @@ export const Topbar: React.FC = () => {
           <Plus className="w-4 h-4" />
         </button>
 
-        {/* User Avatar */}
+        {/* User Profile Button */}
         <button
           onClick={() => setActivePage('settings')}
-          className="flex items-center gap-2 p-1 rounded-full hover:ring-2 hover:ring-finora-primary/30 transition-all focus:outline-none"
-          title="Pengaturan Profil"
+          className="flex items-center gap-2 p-1 pl-2 sm:pl-3 pr-1.5 rounded-full hover:bg-slate-100 transition-all focus:outline-none border border-slate-200"
+          title="Profil Pengguna & Pengaturan"
         >
+          <span className="text-xs font-semibold text-finora-textPrimary max-w-[120px] truncate hidden sm:inline">
+            {userProfile.name}
+          </span>
           {userProfile.avatarUrl ? (
             <img
               src={userProfile.avatarUrl}
               alt={userProfile.name}
-              className="w-8 h-8 rounded-full object-cover border border-slate-200"
+              className="w-7 h-7 rounded-full object-cover border border-slate-200"
             />
           ) : (
-            <div className="w-8 h-8 rounded-full bg-finora-lightBlue text-finora-primary flex items-center justify-center">
-              <User className="w-4 h-4" />
+            <div className="w-7 h-7 rounded-full bg-finora-lightBlue text-finora-primary flex items-center justify-center font-bold text-xs">
+              {userProfile.name ? userProfile.name.charAt(0).toUpperCase() : <User className="w-3.5 h-3.5" />}
             </div>
           )}
         </button>

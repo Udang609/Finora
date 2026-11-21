@@ -2,7 +2,7 @@
   "name": "finora",
   "private": true,
   "version": "1.0.0",
-  "description": "Finora: Personal Finance App. Aplikasi manajemen keuangan pribadi modern untuk mengelola pemasukan, pengeluaran, anggaran, dan target tabungan dengan dukungan Guest Mode & Account Mode.",
+  "description": "Finora: Personal Finance App. Aplikasi manajemen keuangan pribadi modern untuk mengelola pemasukan, pengeluaran, anggaran, dan target tabungan dengan login nama tanpa email atau nomor HP.",
   "type": "module",
   "scripts": {
     "dev": "vite",

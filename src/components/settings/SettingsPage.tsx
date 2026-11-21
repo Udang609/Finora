@@ -20,9 +20,7 @@ export const SettingsPage: React.FC = () => {
   const { 
     userProfile, 
     updateUserProfile, 
-    accessMode, 
-    setAccessMode,
-    migrateGuestToAccount, 
+    logout,
     resetAllData 
   } = useFinance();
 
@@ -30,7 +28,6 @@ export const SettingsPage: React.FC = () => {
 
   // Form states for profile
   const [name, setName] = useState(userProfile.name);
-  const [email, setEmail] = useState(userProfile.email);
   const [avatarUrl, setAvatarUrl] = useState(userProfile.avatarUrl);
 
   // Reset confirmation dialogs
@@ -39,9 +36,9 @@ export const SettingsPage: React.FC = () => {
 
   const handleSaveProfile = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!name.trim()) return;
     updateUserProfile({
       name: name.trim(),
-      email: email.trim(),
       avatarUrl: avatarUrl.trim(),
     });
   };
@@ -61,7 +58,7 @@ export const SettingsPage: React.FC = () => {
           Pengaturan
         </h2>
         <p className="text-xs sm:text-sm text-finora-textSecondary mt-1">
-          Kelola profil pengguna, preferensi aplikasi, dan mode akun
+          Kelola profil pengguna, preferensi aplikasi, dan sesi akun
         </p>
       </div>
 
@@ -70,7 +67,7 @@ export const SettingsPage: React.FC = () => {
         {[
           { id: 'profile' as SettingsTab, label: 'Profil', icon: User },
           { id: 'preferences' as SettingsTab, label: 'Preferensi', icon: Sliders },
-          { id: 'account' as SettingsTab, label: 'Akun & Akses', icon: ShieldCheck },
+          { id: 'account' as SettingsTab, label: 'Akun & Sesi', icon: ShieldCheck },
           { id: 'about' as SettingsTab, label: 'Tentang Aplikasi', icon: Info },
         ].map((tab) => {
           const Icon = tab.icon;
@@ -144,18 +141,6 @@ export const SettingsPage: React.FC = () => {
               />
             </div>
 
-            <div>
-              <label className="block text-xs font-semibold text-finora-textPrimary mb-1">
-                Alamat Email
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-btn border border-finora-border focus:outline-none focus:ring-2 focus:ring-finora-primary"
-              />
-            </div>
-
             <div className="pt-2">
               <Button type="submit" variant="primary" size="md" leftIcon={<Save className="w-4 h-4" />}>
                 Simpan Profil
@@ -202,54 +187,50 @@ export const SettingsPage: React.FC = () => {
         </div>
       )}
 
-      {/* Tab 3: Account & Access Mode */}
+      {/* Tab 3: Account & Session */}
       {activeTab === 'account' && (
         <div className="bg-white rounded-card p-6 border border-finora-border shadow-soft max-w-2xl space-y-6">
-          {/* Current Status Box */}
+          {/* Current Session Box */}
           <div className="p-4 rounded-xl border bg-slate-50 border-slate-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <span className="text-xs font-medium text-slate-500">Mode Akses Saat Ini</span>
-                <h4 className="text-base font-bold text-finora-textPrimary flex items-center gap-2 mt-0.5">
-                  {accessMode === 'guest' ? 'Guest Mode (Mode Tamu)' : 'Account Mode (Akun Terdaftar)'}
-                  <span
-                    className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-full ${
-                      accessMode === 'guest'
-                        ? 'bg-amber-100 text-amber-800'
-                        : 'bg-emerald-100 text-emerald-800'
-                    }`}
-                  >
-                    Aktif
-                  </span>
-                </h4>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <img
+                  src={userProfile.avatarUrl}
+                  alt={userProfile.name}
+                  className="w-12 h-12 rounded-full object-cover border border-slate-200"
+                />
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h4 className="text-base font-bold text-finora-textPrimary">
+                      {userProfile.name}
+                    </h4>
+                    <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                      Sesi Aktif
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Masuk dengan nama (tanpa email atau nomor HP)
+                  </p>
+                </div>
               </div>
 
-              {accessMode === 'guest' ? (
-                <Button
-                  type="button"
-                  variant="primary"
-                  size="sm"
-                  onClick={migrateGuestToAccount}
-                >
-                  Migrasi ke Akun
-                </Button>
-              ) : (
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setIsLogoutConfirmOpen(true)}
-                  leftIcon={<LogOut className="w-3.5 h-3.5" />}
-                >
-                  Logout
-                </Button>
-              )}
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setIsLogoutConfirmOpen(true)}
+                leftIcon={<LogOut className="w-3.5 h-3.5" />}
+              >
+                Keluar (Ganti Pengguna)
+              </Button>
             </div>
-            <p className="text-xs text-slate-500 mt-2">
-              {accessMode === 'guest'
-                ? 'Data Anda tersimpan di browser lokal. Klik "Migrasi ke Akun" untuk menghubungkan data dengan profil akun permanen.'
-                : 'Data Anda telah tersinkronisasi dalam profil akun aktif.'}
-            </p>
+
+            <div className="mt-4 pt-3 border-t border-slate-200 text-xs text-slate-600 flex items-start gap-2">
+              <ShieldCheck className="w-4 h-4 text-finora-green flex-shrink-0 mt-0.5" />
+              <span>
+                Data keuangan Anda disimpan 100% secara lokal pada perangkat ini. Privasi Anda terjaga tanpa membutuhkan kata sandi, email, ataupun nomor telepon.
+              </span>
+            </div>
           </div>
 
           {/* Quick Actions */}
@@ -358,10 +339,10 @@ export const SettingsPage: React.FC = () => {
       <ConfirmDialog
         isOpen={isLogoutConfirmOpen}
         onClose={() => setIsLogoutConfirmOpen(false)}
-        onConfirm={() => setAccessMode('guest')}
-        title="Keluar dari Akun?"
-        message="Anda akan beralih ke Mode Tamu (Guest Mode). Data tersimpan tetap aman di perangkat ini."
-        confirmText="Logout"
+        onConfirm={logout}
+        title="Keluar dari Sesi?"
+        message="Anda akan kembali ke layar masuk nama. Seluruh data transaksi dan catatan tetap aman di perangkat ini."
+        confirmText="Ya, Keluar"
         cancelText="Batal"
         variant="primary"
       />
