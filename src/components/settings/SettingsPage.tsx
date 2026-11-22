@@ -10,8 +10,7 @@ import {
   LogOut,
   Upload,
   Trash2,
-  Camera,
-  Sparkles
+  Camera
 } from 'lucide-react';
 import { useFinance } from '../../context/FinanceContext';
 import { Button } from '../common/Button';
@@ -26,8 +25,7 @@ export const SettingsPage: React.FC = () => {
     userProfile, 
     updateUserProfile, 
     logout,
-    resetAllData,
-    loadSampleData
+    resetAllData
   } = useFinance();
 
   const [activeTab, setActiveTab] = useState<SettingsTab>('profile');
@@ -42,7 +40,6 @@ export const SettingsPage: React.FC = () => {
 
   // Reset & action confirmation dialogs
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
-  const [isSampleConfirmOpen, setIsSampleConfirmOpen] = useState(false);
   const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -343,28 +340,6 @@ export const SettingsPage: React.FC = () => {
                 Bersihkan Data
               </Button>
             </div>
-
-            {/* Load Sample Demo Data */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3.5 rounded-xl border border-slate-200 bg-white gap-3">
-              <div>
-                <p className="text-xs sm:text-sm font-semibold text-finora-textPrimary flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-finora-primary" />
-                  Muat Data Contoh (Opsional)
-                </p>
-                <p className="text-xs text-slate-500">
-                  Mengisi data transaksi dan anggaran simulasi untuk mencoba visualisasi laporan
-                </p>
-              </div>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                leftIcon={<Sparkles className="w-3.5 h-3.5 text-finora-primary" />}
-                onClick={() => setIsSampleConfirmOpen(true)}
-              >
-                Muat Contoh
-              </Button>
-            </div>
           </div>
         </div>
       )}
@@ -441,18 +416,6 @@ export const SettingsPage: React.FC = () => {
         confirmText="Ya, Bersihkan Data"
         cancelText="Batal"
         variant="danger"
-      />
-
-      {/* Confirm Load Sample Dialog */}
-      <ConfirmDialog
-        isOpen={isSampleConfirmOpen}
-        onClose={() => setIsSampleConfirmOpen(false)}
-        onConfirm={loadSampleData}
-        title="Muat Data Contoh?"
-        message="Aplikasi akan diisi dengan data transaksi dan anggaran simulasi untuk keperluan uji coba tampilan laporan dan grafik. Lanjutkan?"
-        confirmText="Ya, Muat Contoh"
-        cancelText="Batal"
-        variant="primary"
       />
 
       {/* Confirm Logout Dialog */}

@@ -12,10 +12,7 @@ import {
   INITIAL_TRANSACTIONS, 
   INITIAL_BUDGETS, 
   INITIAL_SAVINGS_GOALS, 
-  INITIAL_USER_PROFILE,
-  SAMPLE_TRANSACTIONS,
-  SAMPLE_BUDGETS,
-  SAMPLE_SAVINGS_GOALS
+  INITIAL_USER_PROFILE
 } from '../data/initialData';
 
 interface FinanceContextType {
@@ -32,7 +29,6 @@ interface FinanceContextType {
   userProfile: UserProfile;
   updateUserProfile: (data: Partial<UserProfile>) => void;
   resetAllData: () => void;
-  loadSampleData: () => void;
 
   // Transactions
   transactions: Transaction[];
@@ -353,13 +349,6 @@ export const FinanceProvider: React.FC<{ children: ReactNode }> = ({ children })
     showToast('Semua catatan pemasukan, pengeluaran, anggaran, dan tabungan berhasil dibersihkan.', 'info');
   };
 
-  const loadSampleData = () => {
-    setTransactions(SAMPLE_TRANSACTIONS);
-    setBudgets(SAMPLE_BUDGETS);
-    setSavingsGoals(SAMPLE_SAVINGS_GOALS);
-    showToast('Data contoh berhasil dimuat untuk mencoba fitur.', 'success');
-  };
-
   return (
     <FinanceContext.Provider
       value={{
@@ -373,7 +362,6 @@ export const FinanceProvider: React.FC<{ children: ReactNode }> = ({ children })
         userProfile,
         updateUserProfile,
         resetAllData,
-        loadSampleData,
         transactions,
         addTransaction,
         updateTransaction,

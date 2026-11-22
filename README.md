@@ -74,7 +74,7 @@ Finora memecahkan masalah ini dengan:
 - **Login Privat Pakai Nama:** Masuk cepat tanpa email atau nomor HP.
 - Pengaturan profil: Nama pengguna dan pilihan Avatar.
 - Opsi **Keluar / Ganti Pengguna:** Kembali ke layar login dengan data lokal tetap terlindungi.
-- Opsi **Reset Data:** Mengembalikan data ke konfigurasi sampel bawaan dokumen spesifikasi.
+- Opsi **Bersihkan Data:** Mengosongkan seluruh catatan transaksi, anggaran, dan tabungan agar akun kembali bersih.
 
 ---
 
