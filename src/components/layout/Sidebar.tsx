@@ -65,9 +65,9 @@ export const Sidebar: React.FC = () => {
   ];
 
   return (
-    <aside className="hidden lg:flex flex-col w-64 bg-finora-darkBlue text-white h-screen sticky top-0 flex-shrink-0 shadow-lg select-none">
+    <aside className="hidden lg:flex flex-col w-64 bg-finora-bgSecondary border-r border-finora-border text-finora-textPrimary h-screen sticky top-0 flex-shrink-0 shadow-soft select-none dark:shadow-soft-dark">
       {/* Brand Header */}
-      <div className="flex items-center justify-between px-6 py-6 border-b border-white/10">
+      <div className="flex items-center justify-between px-6 py-6 border-b border-finora-border">
         <div className="flex items-center gap-3">
           <img
             src="./pwa-192x192.png"
@@ -77,13 +77,13 @@ export const Sidebar: React.FC = () => {
             className="h-10 w-10 rounded-xl shadow-md flex-shrink-0"
           />
           <div>
-            <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-1.5">
+            <h1 className="text-xl font-bold tracking-tight text-finora-textPrimary flex items-center gap-1.5">
               FINORA
-              <span className="text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded bg-blue-500/30 text-blue-300">
+              <span className="text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded bg-finora-primary/20 text-finora-primary">
                 v1.0
               </span>
             </h1>
-            <p className="text-[11px] text-slate-300 font-medium">Personal Finance App</p>
+            <p className="text-[11px] text-finora-textMuted font-medium">Personal Finance App</p>
           </div>
         </div>
       </div>
@@ -92,7 +92,7 @@ export const Sidebar: React.FC = () => {
       <div className="px-5 pt-5 pb-2">
         <button
           onClick={() => openAddTransactionWithAmount()}
-          className="w-full flex items-center justify-center gap-2 bg-finora-primary hover:bg-finora-primaryDark text-white py-2.5 px-4 rounded-btn font-medium text-sm transition-all shadow-md active:scale-[0.98]"
+          className="w-full flex items-center justify-center gap-2 btn-primary"
         >
           <Plus className="w-4 h-4" />
           <span>Tambah Transaksi</span>
@@ -116,7 +116,7 @@ export const Sidebar: React.FC = () => {
                   className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                     isActive
                       ? 'bg-finora-primary text-white shadow-sm'
-                      : 'text-slate-300 hover:bg-white/10 hover:text-white'
+                      : 'text-finora-textSecondary hover:bg-finora-bgTeritary hover:text-finora-textPrimary'
                   }`}
                 >
                   <div className="flex items-center gap-3">
@@ -124,9 +124,9 @@ export const Sidebar: React.FC = () => {
                     <span>{item.label}</span>
                   </div>
                   {isTransactionsExpanded ? (
-                    <ChevronDown className="w-4 h-4 text-slate-300" />
+                    <ChevronDown className="w-4 h-4 text-finora-textMuted" />
                   ) : (
-                    <ChevronRight className="w-4 h-4 text-slate-300" />
+                    <ChevronRight className="w-4 h-4 text-finora-textMuted" />
                   )}
                 </button>
 
@@ -137,8 +137,8 @@ export const Sidebar: React.FC = () => {
                       onClick={() => setActivePage('transactions')}
                       className={`w-full text-left text-xs py-1.5 px-2.5 rounded-lg transition-colors ${
                         activePage === 'transactions'
-                          ? 'text-white font-medium bg-white/10'
-                          : 'text-slate-300 hover:text-white hover:bg-white/5'
+                          ? 'text-finora-textPrimary font-medium bg-finora-bgTeritary'
+                          : 'text-finora-textSecondary hover:text-finora-textPrimary hover:bg-finora-bgTeritary'
                       }`}
                     >
                       Semua Transaksi
@@ -156,7 +156,7 @@ export const Sidebar: React.FC = () => {
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                 isActive
                   ? 'bg-finora-primary text-white shadow-sm'
-                  : 'text-slate-300 hover:bg-white/10 hover:text-white'
+                  : 'text-finora-textSecondary hover:bg-finora-bgTeritary hover:text-finora-textPrimary'
               }`}
             >
               <Icon className="w-4 h-4" />
@@ -167,25 +167,25 @@ export const Sidebar: React.FC = () => {
       </nav>
 
       {/* User Profile Footer */}
-      <div className="p-4 border-t border-white/10 bg-slate-900/40">
+      <div className="p-4 border-t border-finora-border bg-finora-bgTeritary">
         <div 
           onClick={() => setActivePage('settings')}
-          className="flex items-center gap-3 p-2 rounded-xl hover:bg-white/10 transition-colors cursor-pointer"
+          className="flex items-center gap-3 p-2 rounded-xl hover:bg-finora-border transition-colors cursor-pointer"
         >
           {userProfile.avatarUrl ? (
             <img
               src={userProfile.avatarUrl}
               alt={userProfile.name}
-              className="w-9 h-9 rounded-full object-cover border border-white/20"
+              className="w-9 h-9 rounded-full object-cover border border-finora-border"
             />
           ) : (
-            <div className="w-9 h-9 rounded-full bg-white/10 text-white flex items-center justify-center font-bold text-xs border border-white/20">
+            <div className="w-9 h-9 rounded-full bg-finora-bgTeritary text-finora-textPrimary flex items-center justify-center font-bold text-xs border border-finora-border">
               {userProfile.name ? userProfile.name.charAt(0).toUpperCase() : <User className="w-4 h-4" />}
             </div>
           )}
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-semibold text-white truncate">{userProfile.name || 'Pengguna Finora'}</p>
-            <p className="text-[10px] text-slate-400 truncate">Finora Personal</p>
+            <p className="text-xs font-semibold text-finora-textPrimary truncate">{userProfile.name || 'Pengguna Finora'}</p>
+            <p className="text-[10px] text-finora-textMuted truncate">Finora Personal</p>
           </div>
         </div>
       </div>

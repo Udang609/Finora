@@ -5,7 +5,7 @@ interface SummaryCardProps {
   amount: string;
   subtitle?: string;
   icon: ReactNode;
-  iconBgColor: string;
+  iconBgColor?: string;
   accentColor?: string;
   onClick?: () => void;
 }
@@ -15,22 +15,20 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
   amount,
   subtitle,
   icon,
-  iconBgColor,
-  accentColor = 'border-finora-border',
+  iconBgColor = 'bg-finora-lightBlue',
+  accentColor = 'bg-finora-border',
   onClick,
 }) => {
   return (
     <div
       onClick={onClick}
-      className={`bg-white rounded-card p-5 border border-finora-border shadow-soft transition-all duration-200 ${
-        onClick ? 'cursor-pointer hover:shadow-soft-lg hover:-translate-y-0.5' : ''
-      }`}
+      className={`card card-hover p-5 ${accentColor}`}
     >
       <div className="flex items-center justify-between mb-3">
         <span className="text-xs sm:text-sm font-medium text-finora-textSecondary tracking-wide">
           {title}
         </span>
-        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${iconBgColor}`}>
+        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${iconBgColor} dark:bg-finora-bgTeritary`}>
           {icon}
         </div>
       </div>

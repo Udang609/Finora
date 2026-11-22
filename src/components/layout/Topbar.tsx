@@ -15,10 +15,10 @@ export const Topbar: React.FC = () => {
   const todayStr = '2026-11-19';
 
   return (
-    <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-finora-border px-4 sm:px-6 py-3.5 flex items-center justify-between gap-4 transition-all">
+    <header className="sticky top-0 z-30 bg-finora-bgSecondary/95 backdrop-blur-md border-b border-finora-border px-4 sm:px-6 py-3.5 flex items-center justify-between gap-4 transition-all">
       {/* Search Input */}
       <div className="relative flex-1 max-w-md">
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-finora-textMuted">
           <Search className="w-4 h-4" />
         </div>
         <input
@@ -26,14 +26,14 @@ export const Topbar: React.FC = () => {
           value={globalSearchQuery}
           onChange={(e) => setGlobalSearchQuery(e.target.value)}
           placeholder="Cari transaksi, kategori, atau catatan..."
-          className="w-full pl-9 pr-4 py-2 text-xs sm:text-sm bg-finora-bg border border-finora-border rounded-btn text-finora-textPrimary placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-finora-primary/20 focus:border-finora-primary transition-all"
+          className="w-full pl-9 pr-4 py-2 text-xs sm:text-sm input-field"
         />
       </div>
 
       {/* Right controls */}
       <div className="flex items-center gap-2 sm:gap-4">
         {/* Date Display */}
-        <div className="hidden md:flex items-center gap-1.5 text-xs text-finora-textSecondary bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100">
+        <div className="hidden md:flex items-center gap-1.5 text-xs text-finora-textSecondary bg-finora-bgTeritary px-3 py-1.5 rounded-lg border border-finora-border">
           <Calendar className="w-3.5 h-3.5 text-finora-primary" />
           <span className="font-medium">{formatDateID(todayStr)}</span>
         </div>
@@ -41,7 +41,7 @@ export const Topbar: React.FC = () => {
         {/* Quick Add Button (Mobile/Tablet) */}
         <button
           onClick={() => openAddTransactionWithAmount()}
-          className="lg:hidden flex items-center justify-center p-2 rounded-btn bg-finora-primary hover:bg-finora-primaryDark text-white shadow-sm"
+          className="lg:hidden flex items-center justify-center p-2 rounded-btn btn-primary"
           title="Tambah Transaksi"
           aria-label="Tambah Transaksi"
         >
@@ -51,7 +51,7 @@ export const Topbar: React.FC = () => {
         {/* User Profile Button */}
         <button
           onClick={() => setActivePage('settings')}
-          className="flex items-center gap-2 p-1 pl-2 sm:pl-3 pr-1.5 rounded-full hover:bg-slate-100 transition-all focus:outline-none border border-slate-200"
+          className="flex items-center gap-2 p-1 pl-2 sm:pl-3 pr-1.5 rounded-full hover:bg-finora-bgTeritary transition-all focus:outline-none border border-finora-border"
           title="Profil Pengguna & Pengaturan"
         >
           <span className="text-xs font-semibold text-finora-textPrimary max-w-[120px] truncate hidden sm:inline">
@@ -61,7 +61,7 @@ export const Topbar: React.FC = () => {
             <img
               src={userProfile.avatarUrl}
               alt={userProfile.name}
-              className="w-7 h-7 rounded-full object-cover border border-slate-200"
+              className="w-7 h-7 rounded-full object-cover border border-finora-border"
             />
           ) : (
             <div className="w-7 h-7 rounded-full bg-finora-lightBlue text-finora-primary flex items-center justify-center font-bold text-xs">
