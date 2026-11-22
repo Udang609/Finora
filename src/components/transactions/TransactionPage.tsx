@@ -115,16 +115,16 @@ export const TransactionPage: React.FC = () => {
       </div>
 
       {/* Filter Tabs & Search Controls */}
-      <div className="bg-white rounded-card p-4 border border-finora-border shadow-soft space-y-3">
+      <div className="card card-hover p-4 space-y-3">
         {/* Type Filter Buttons */}
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="inline-flex p-1 bg-slate-100 rounded-xl">
+          <div className="inline-flex p-1 bg-finora-bgTeritary rounded-xl">
             <button
               onClick={() => setFilterType('all')}
               className={`px-4 py-1.5 text-xs font-semibold rounded-lg transition-all ${
                 filterType === 'all'
-                  ? 'bg-white text-finora-textPrimary shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-finora-bgSecondary text-finora-textPrimary shadow-sm'
+                  : 'text-finora-textSecondary hover:text-finora-textPrimary'
               }`}
             >
               Semua
@@ -134,7 +134,7 @@ export const TransactionPage: React.FC = () => {
               className={`px-4 py-1.5 text-xs font-semibold rounded-lg transition-all ${
                 filterType === 'income'
                   ? 'bg-finora-green text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900'
+                  : 'text-finora-textSecondary hover:text-finora-textPrimary'
               }`}
             >
               Pemasukan
@@ -144,7 +144,7 @@ export const TransactionPage: React.FC = () => {
               className={`px-4 py-1.5 text-xs font-semibold rounded-lg transition-all ${
                 filterType === 'expense'
                   ? 'bg-finora-red text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900'
+                  : 'text-finora-textSecondary hover:text-finora-textPrimary'
               }`}
             >
               Pengeluaran
@@ -158,9 +158,9 @@ export const TransactionPage: React.FC = () => {
         </div>
 
         {/* Search & Category Filter Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 border-t border-slate-100">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 border-t border-finora-border">
           <div className="sm:col-span-2 relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-finora-textMuted">
               <Search className="w-4 h-4" />
             </div>
             <input
@@ -168,12 +168,12 @@ export const TransactionPage: React.FC = () => {
               value={globalSearchQuery}
               onChange={(e) => setGlobalSearchQuery(e.target.value)}
               placeholder="Search transaksi..."
-              className="w-full pl-9 pr-3.5 py-2 text-xs sm:text-sm rounded-btn border border-finora-border bg-finora-bg focus:outline-none focus:ring-2 focus:ring-finora-primary/20 focus:border-finora-primary"
+              className="input-field pl-9"
             />
           </div>
 
           <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-finora-textMuted">
               <Filter className="w-3.5 h-3.5" />
             </div>
             <select
@@ -231,7 +231,7 @@ export const TransactionPage: React.FC = () => {
                 </div>
 
                 {/* Card containing items */}
-                <div className="bg-white rounded-card border border-finora-border shadow-soft divide-y divide-slate-100 overflow-hidden">
+                <div className="card overflow-hidden divide-y divide-finora-border">
                   {dateTransactions.map((tx) => {
                     const isIncome = tx.type === 'income';
                     const catColor = getCategoryColor(tx.category);
@@ -239,7 +239,7 @@ export const TransactionPage: React.FC = () => {
                     return (
                       <div
                         key={tx.id}
-                        className="p-3.5 sm:p-4 flex items-center justify-between hover:bg-slate-50/70 transition-colors group"
+                        className="p-3.5 sm:p-4 flex items-center justify-between hover:bg-finora-bgTeritary/70 transition-colors group"
                       >
                         <div
                           onClick={() => setSelectedTxForDetail(tx)}
@@ -247,8 +247,8 @@ export const TransactionPage: React.FC = () => {
                         >
                           <div
                             className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                              isIncome ? 'bg-emerald-50 text-finora-green' : 'bg-red-50 text-finora-red'
-                            }`}
+                              isIncome ? 'bg-finora-greenLight text-finora-green' : 'bg-finora-redLight text-finora-red'
+                            } dark:bg-finora-bgTeritary`}
                           >
                             {isIncome ? (
                               <ArrowDownLeft className="w-5 h-5" />
@@ -267,7 +267,7 @@ export const TransactionPage: React.FC = () => {
                                 {tx.category}
                               </span>
                               {tx.notes && (
-                                <span className="text-[11px] text-slate-400 truncate max-w-[150px] sm:max-w-xs">
+                                <span className="text-[11px] text-finora-textMuted truncate max-w-[150px] sm:max-w-xs">
                                   {tx.notes}
                                 </span>
                               )}
@@ -289,14 +289,14 @@ export const TransactionPage: React.FC = () => {
                           <div className="hidden sm:flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                             <button
                               onClick={() => handleEdit(tx)}
-                              className="p-1.5 text-slate-400 hover:text-finora-primary hover:bg-blue-50 rounded-lg transition-colors"
+                              className="p-1.5 text-finora-textMuted hover:text-finora-primary hover:bg-finora-lightBlue dark:hover:bg-finora-bgTeritary rounded-lg transition-colors"
                               title="Edit Transaksi"
                             >
                               <Edit3 className="w-4 h-4" />
                             </button>
                             <button
                               onClick={() => setTxToDelete(tx)}
-                              className="p-1.5 text-slate-400 hover:text-finora-red hover:bg-red-50 rounded-lg transition-colors"
+                              className="p-1.5 text-finora-textMuted hover:text-finora-red hover:bg-finora-redLight dark:hover:bg-finora-bgTeritary rounded-lg transition-colors"
                               title="Hapus Transaksi"
                             >
                               <Trash2 className="w-4 h-4" />

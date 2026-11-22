@@ -240,7 +240,7 @@ export const ReportsPage: React.FC = () => {
         </div>
 
         {/* Period Selector Tabs */}
-        <div className="inline-flex p-1 bg-white border border-finora-border rounded-xl shadow-soft">
+        <div className="inline-flex p-1 bg-finora-bgSecondary border border-finora-border rounded-xl shadow-soft">
           {(['today', 'week', 'month', 'year', 'custom'] as ReportPeriod[]).map((p) => {
             const labels: { [k in ReportPeriod]: string } = {
               today: 'Hari Ini',
@@ -256,7 +256,7 @@ export const ReportsPage: React.FC = () => {
                 className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
                   period === p
                     ? 'bg-finora-primary text-white shadow-sm'
-                    : 'text-slate-600 hover:text-slate-900'
+                    : 'text-finora-textSecondary hover:text-finora-textPrimary'
                 }`}
               >
                 {labels[p]}
@@ -268,69 +268,69 @@ export const ReportsPage: React.FC = () => {
 
       {/* Custom Date Picker inputs if Custom selected */}
       {period === 'custom' && (
-        <div className="bg-white rounded-card p-4 border border-finora-border shadow-soft flex items-center gap-3">
+        <div className="card card-hover p-4 flex items-center gap-3">
           <Calendar className="w-4 h-4 text-finora-primary" />
           <span className="text-xs font-semibold text-finora-textPrimary">Rentang Tanggal:</span>
           <input
             type="date"
             value={customStartDate}
             onChange={(e) => setCustomStartDate(e.target.value)}
-            className="text-xs border border-finora-border rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-finora-primary"
+            className="input-field text-xs w-auto"
           />
-          <span className="text-xs text-slate-400">sampai</span>
+          <span className="text-xs text-finora-textMuted">sampai</span>
           <input
             type="date"
             value={customEndDate}
             onChange={(e) => setCustomEndDate(e.target.value)}
-            className="text-xs border border-finora-border rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-finora-primary"
+            className="input-field text-xs w-auto"
           />
         </div>
       )}
 
       {/* 3 Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white rounded-card p-5 border border-finora-border shadow-soft">
+        <div className="card card-hover p-5">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-semibold uppercase text-finora-textSecondary tracking-wider">
               Pemasukan
             </span>
-            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-finora-green flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-finora-greenLight text-finora-green flex items-center justify-center dark:bg-finora-green-light">
               <TrendingUp className="w-4 h-4" />
             </div>
           </div>
           <h3 className="text-xl sm:text-2xl font-bold text-finora-green">
             {formatIDR(totalIncome)}
           </h3>
-          <p className="text-xs text-slate-500 mt-1 flex items-center gap-1">
-            <ArrowUpRight className="w-3.5 h-3.5 text-emerald-600" />
+          <p className="text-xs text-finora-textSecondary mt-1 flex items-center gap-1">
+            <ArrowUpRight className="w-3.5 h-3.5 text-finora-green" />
             <span>Pemasukan aktif periode ini</span>
           </p>
         </div>
 
-        <div className="bg-white rounded-card p-5 border border-finora-border shadow-soft">
+        <div className="card card-hover p-5">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-semibold uppercase text-finora-textSecondary tracking-wider">
               Pengeluaran
             </span>
-            <div className="w-8 h-8 rounded-lg bg-red-50 text-finora-red flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-finora-redLight text-finora-red flex items-center justify-center dark:bg-finora-red-light">
               <TrendingDown className="w-4 h-4" />
             </div>
           </div>
           <h3 className="text-xl sm:text-2xl font-bold text-finora-red">
             {formatIDR(totalExpense)}
           </h3>
-          <p className="text-xs text-slate-500 mt-1 flex items-center gap-1">
-            <ArrowDownRight className="w-3.5 h-3.5 text-red-600" />
+          <p className="text-xs text-finora-textSecondary mt-1 flex items-center gap-1">
+            <ArrowDownRight className="w-3.5 h-3.5 text-finora-red" />
             <span>Total dana keluar</span>
           </p>
         </div>
 
-        <div className="bg-white rounded-card p-5 border border-finora-border shadow-soft">
+        <div className="card card-hover p-5">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-semibold uppercase text-finora-textSecondary tracking-wider">
               Arus Kas Bersih
             </span>
-            <div className="w-8 h-8 rounded-lg bg-blue-50 text-finora-primary flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-finora-lightBlue text-finora-primary flex items-center justify-center dark:bg-finora-light-blue">
               <Coins className="w-4 h-4" />
             </div>
           </div>
@@ -341,7 +341,7 @@ export const ReportsPage: React.FC = () => {
           >
             {formatIDR(netCashFlow)}
           </h3>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-finora-textSecondary mt-1">
             {netCashFlow >= 0 ? 'Surplus anggaran tercatat' : 'Defisit (pengeluaran > pemasukan)'}
           </p>
         </div>
@@ -362,8 +362,8 @@ export const ReportsPage: React.FC = () => {
           </div>
 
           {!hasBarChartData ? (
-            <div className="h-64 sm:h-72 w-full flex flex-col items-center justify-center text-center p-6 bg-slate-50/60 rounded-xl border border-dashed border-slate-200">
-              <div className="w-12 h-12 rounded-full bg-blue-50 text-finora-primary flex items-center justify-center mb-3">
+            <div className="h-64 sm:h-72 w-full flex flex-col items-center justify-center text-center p-6 bg-finora-bgTeritary/60 rounded-xl border border-dashed border-finora-border">
+              <div className="w-12 h-12 rounded-full bg-finora-lightBlue text-finora-primary flex items-center justify-center mb-3 dark:bg-finora-light-blue">
                 <TrendingUp className="w-6 h-6" />
               </div>
               <h4 className="text-sm font-semibold text-finora-textPrimary">
@@ -377,21 +377,21 @@ export const ReportsPage: React.FC = () => {
             <div className="h-64 sm:h-72 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={barChartData} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
-                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#64748B', fontSize: 11 }} />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--finora-border)" />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: 'var(--finora-text-secondary)', fontSize: 11 }} />
                   <YAxis
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: '#64748B', fontSize: 11 }}
+                    tick={{ fill: 'var(--finora-text-secondary)', fontSize: 11 }}
                     tickFormatter={(val) => (val === 0 ? '0' : `${val / 1000000} jt`)}
                   />
                   <Tooltip
                     formatter={(value: any) => [formatIDR(Number(value)), '']}
-                    contentStyle={{ backgroundColor: '#fff', borderRadius: '12px', border: '1px solid #E2E8F0', fontSize: '12px' }}
+                    contentStyle={{ backgroundColor: 'var(--finora-bg-secondary)', borderRadius: '12px', border: '1px solid var(--finora-border)', fontSize: '12px', color: 'var(--finora-text-primary)' }}
                   />
-                  <Legend verticalAlign="top" align="right" iconType="circle" wrapperStyle={{ paddingBottom: '10px', fontSize: '12px' }} />
-                  <Bar dataKey="Pemasukan" fill="#16A34A" radius={[6, 6, 0, 0]} maxBarSize={30} />
-                  <Bar dataKey="Pengeluaran" fill="#DC2626" radius={[6, 6, 0, 0]} maxBarSize={30} />
+                  <Legend verticalAlign="top" align="right" iconType="circle" wrapperStyle={{ paddingBottom: '10px', fontSize: '12px', color: 'var(--finora-text-primary)' }} />
+                  <Bar dataKey="Pemasukan" fill="var(--finora-green)" radius={[6, 6, 0, 0]} maxBarSize={30} />
+                  <Bar dataKey="Pengeluaran" fill="var(--finora-red)" radius={[6, 6, 0, 0]} maxBarSize={30} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -411,7 +411,7 @@ export const ReportsPage: React.FC = () => {
           </div>
 
           {expenseByCategory.length === 0 ? (
-            <div className="h-64 flex items-center justify-center text-xs text-slate-400">
+            <div className="h-64 flex items-center justify-center text-xs text-finora-textMuted">
               Tidak ada data pengeluaran pada periode ini
             </div>
           ) : (
@@ -433,14 +433,14 @@ export const ReportsPage: React.FC = () => {
                   </Pie>
                   <Tooltip
                     formatter={(val: any) => [formatIDR(Number(val)), 'Nominal']}
-                    contentStyle={{ backgroundColor: '#fff', borderRadius: '12px', border: '1px solid #E2E8F0', fontSize: '12px' }}
+                    contentStyle={{ backgroundColor: 'var(--finora-bg-secondary)', borderRadius: '12px', border: '1px solid var(--finora-border)', fontSize: '12px', color: 'var(--finora-text-primary)' }}
                   />
                   <Legend
                     layout="horizontal"
                     verticalAlign="bottom"
                     align="center"
                     iconType="circle"
-                    wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }}
+                    wrapperStyle={{ fontSize: '11px', paddingTop: '10px', color: 'var(--finora-text-primary)' }}
                   />
                 </PieChart>
               </ResponsiveContainer>
@@ -450,7 +450,7 @@ export const ReportsPage: React.FC = () => {
       </div>
 
       {/* Financial Insights & Analysis Box (Bab 4.5 Analisis Keuangan) */}
-      <div className="bg-white rounded-card p-5 sm:p-6 border border-finora-border shadow-soft">
+      <div className="card card-hover p-5 sm:p-6">
         <h3 className="text-base font-semibold text-finora-textPrimary flex items-center gap-2 mb-3">
           <Lightbulb className="w-5 h-5 text-amber-500" />
           Analisis Keuangan Finora
@@ -458,8 +458,8 @@ export const ReportsPage: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
           {/* Insight 1: Kategori Terbesar */}
-          <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
-            <span className="text-[11px] font-semibold uppercase text-slate-400 block mb-1">
+          <div className="p-4 bg-finora-bgTeritary rounded-xl border border-finora-border">
+            <span className="text-[11px] font-semibold uppercase text-finora-textMuted block mb-1">
               Pengeluaran Terbesar
             </span>
             {topExpenseCategory ? (
@@ -469,19 +469,19 @@ export const ReportsPage: React.FC = () => {
                 </p>
                 <p className="text-xs text-finora-red font-semibold mt-0.5">
                   {formatIDR(topExpenseCategory.value)}
-                  <span className="text-slate-500 font-normal ml-1">
+                  <span className="text-finora-textSecondary font-normal ml-1">
                     ({totalExpense > 0 ? Math.round((topExpenseCategory.value / totalExpense) * 100) : 0}%)
                   </span>
                 </p>
               </>
             ) : (
-              <p className="text-xs text-slate-400">Belum ada pengeluaran</p>
+              <p className="text-xs text-finora-textMuted">Belum ada pengeluaran</p>
             )}
           </div>
 
           {/* Insight 2: Pemasukan Utama */}
-          <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
-            <span className="text-[11px] font-semibold uppercase text-slate-400 block mb-1">
+          <div className="p-4 bg-finora-bgTeritary rounded-xl border border-finora-border">
+            <span className="text-[11px] font-semibold uppercase text-finora-textMuted block mb-1">
               Sumber Pemasukan Terbesar
             </span>
             {topIncomeCategory ? (
@@ -491,25 +491,25 @@ export const ReportsPage: React.FC = () => {
                 </p>
                 <p className="text-xs text-finora-green font-semibold mt-0.5">
                   {formatIDR(topIncomeCategory.value)}
-                  <span className="text-slate-500 font-normal ml-1">
+                  <span className="text-finora-textSecondary font-normal ml-1">
                     ({totalIncome > 0 ? Math.round((topIncomeCategory.value / totalIncome) * 100) : 0}%)
                   </span>
                 </p>
               </>
             ) : (
-              <p className="text-xs text-slate-400">Belum ada pemasukan</p>
+              <p className="text-xs text-finora-textMuted">Belum ada pemasukan</p>
             )}
           </div>
 
           {/* Insight 3: Rasio Tabungan */}
-          <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
-            <span className="text-[11px] font-semibold uppercase text-slate-400 block mb-1">
+          <div className="p-4 bg-finora-bgTeritary rounded-xl border border-finora-border">
+            <span className="text-[11px] font-semibold uppercase text-finora-textMuted block mb-1">
               Tingkat Simpanan (Saving Ratio)
             </span>
             <p className="text-sm font-bold text-finora-primary">
               {totalIncome > 0 ? Math.round(((totalIncome - totalExpense) / totalIncome) * 100) : 0}%
             </p>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-finora-textSecondary mt-0.5">
               {netCashFlow >= 0 ? 'Kondisi finansial berada dalam tingkat aman.' : 'Waspada: pengeluaran lebih tinggi dari pemasukan.'}
             </p>
           </div>

@@ -132,14 +132,14 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
           <label className="block text-xs font-semibold text-finora-textPrimary mb-1.5">
             Jenis Transaksi <span className="text-red-500">*</span>
           </label>
-          <div className="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-xl">
+          <div className="grid grid-cols-2 gap-2 p-1 bg-finora-bgTeritary rounded-xl">
             <button
               type="button"
               onClick={() => handleTypeChange('expense')}
               className={`py-2 text-xs font-bold rounded-lg transition-all ${
                 type === 'expense'
                   ? 'bg-finora-red text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900'
+                  : 'text-finora-textSecondary hover:text-finora-textPrimary'
               }`}
             >
               Pengeluaran
@@ -150,7 +150,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
               className={`py-2 text-xs font-bold rounded-lg transition-all ${
                 type === 'income'
                   ? 'bg-finora-green text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900'
+                  : 'text-finora-textSecondary hover:text-finora-textPrimary'
               }`}
             >
               Pemasukan
@@ -181,7 +181,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
             Nominal (IDR) <span className="text-red-500">*</span>
           </label>
           <div className="relative">
-            <span className="absolute left-3.5 top-2.5 text-xs sm:text-sm font-semibold text-slate-400">
+            <span className="absolute left-3.5 top-2.5 text-xs sm:text-sm font-semibold text-finora-textMuted">
               Rp
             </span>
             <input
