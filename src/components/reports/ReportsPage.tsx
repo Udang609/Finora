@@ -25,6 +25,7 @@ import {
 import { useFinance } from '../../context/FinanceContext';
 import { formatIDR } from '../../utils/formatters';
 import type { Transaction } from '../../types';
+import { useChartColors } from '../../hooks/useChartColors';
 
 type ReportPeriod = 'today' | 'week' | 'month' | 'year' | 'custom';
 
@@ -221,10 +222,17 @@ export const ReportsPage: React.FC = () => {
     (bucket) => bucket.Pemasukan > 0 || bucket.Pengeluaran > 0
   );
 
-  const PIE_COLORS = [
-    '#2563EB', '#16A34A', '#F59E0B', '#DC2626', 
-    '#9333EA', '#06B6D4', '#EC4899', '#84CC16', '#64748B'
-  ];
+  const { 
+    gridStroke, 
+    axisTickFill, 
+    tooltipBg, 
+    tooltipBorder, 
+    tooltipColor, 
+    legendColor, 
+    incomeFill, 
+    expenseFill,
+    pieColors 
+  } = useChartColors();
 
   return (
     <div className="space-y-6 animate-in fade-in duration-200">
@@ -377,21 +385,21 @@ export const ReportsPage: React.FC = () => {
             <div className="h-64 sm:h-72 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={barChartData} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--finora-border)" />
-                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: 'var(--finora-text-secondary)', fontSize: 11 }} />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={gridStroke} />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: axisTickFill, fontSize: 11 }} />
                   <YAxis
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: 'var(--finora-text-secondary)', fontSize: 11 }}
+                    tick={{ fill: axisTickFill, fontSize: 11 }}
                     tickFormatter={(val) => (val === 0 ? '0' : `${val / 1000000} jt`)}
                   />
                   <Tooltip
                     formatter={(value: any) => [formatIDR(Number(value)), '']}
-                    contentStyle={{ backgroundColor: 'var(--finora-bg-secondary)', borderRadius: '12px', border: '1px solid var(--finora-border)', fontSize: '12px', color: 'var(--finora-text-primary)' }}
+                    contentStyle={{ backgroundColor: tooltipBg, borderRadius: '12px', border: `1px solid ${tooltipBorder}`, fontSize: '12px', color: tooltipColor }}
                   />
-                  <Legend verticalAlign="top" align="right" iconType="circle" wrapperStyle={{ paddingBottom: '10px', fontSize: '12px', color: 'var(--finora-text-primary)' }} />
-                  <Bar dataKey="Pemasukan" fill="var(--finora-green)" radius={[6, 6, 0, 0]} maxBarSize={30} />
-                  <Bar dataKey="Pengeluaran" fill="var(--finora-red)" radius={[6, 6, 0, 0]} maxBarSize={30} />
+                  <Legend verticalAlign="top" align="right" iconType="circle" wrapperStyle={{ paddingBottom: '10px', fontSize: '12px', color: legendColor }} />
+                  <Bar dataKey="Pemasukan" fill={incomeFill} radius={[6, 6, 0, 0]} maxBarSize={30} />
+                  <Bar dataKey="Pengeluaran" fill={expenseFill} radius={[6, 6, 0, 0]} maxBarSize={30} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -428,19 +436,19 @@ export const ReportsPage: React.FC = () => {
                     dataKey="value"
                   >
                     {expenseByCategory.map((_, index) => (
-                      <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                      <Cell key={`cell-${index}`} fill={pieColors[index % pieColors.length]} />
                     ))}
                   </Pie>
                   <Tooltip
                     formatter={(val: any) => [formatIDR(Number(val)), 'Nominal']}
-                    contentStyle={{ backgroundColor: 'var(--finora-bg-secondary)', borderRadius: '12px', border: '1px solid var(--finora-border)', fontSize: '12px', color: 'var(--finora-text-primary)' }}
+                    contentStyle={{ backgroundColor: tooltipBg, borderRadius: '12px', border: `1px solid ${tooltipBorder}`, fontSize: '12px', color: tooltipColor }}
                   />
                   <Legend
                     layout="horizontal"
                     verticalAlign="bottom"
                     align="center"
                     iconType="circle"
-                    wrapperStyle={{ fontSize: '11px', paddingTop: '10px', color: 'var(--finora-text-primary)' }}
+                    wrapperStyle={{ fontSize: '11px', paddingTop: '10px', color: legendColor }}
                   />
                 </PieChart>
               </ResponsiveContainer>

@@ -52,7 +52,7 @@ export const RecentTransactionsWidget: React.FC<RecentTransactionsWidgetProps> =
           Belum ada transaksi. Mulai catat pemasukan atau pengeluaran pertamamu.
         </div>
       ) : (
-        <div className="divide-y divide-slate-100">
+        <div className="divide-y divide-finora-border">
           {recentTransactions.map((tx) => {
             const isIncome = tx.type === 'income';
             const catColor = getCategoryColor(tx.category);
@@ -61,13 +61,13 @@ export const RecentTransactionsWidget: React.FC<RecentTransactionsWidgetProps> =
               <div
                 key={tx.id}
                 onClick={() => onSelectTransaction(tx)}
-                className="py-3 flex items-center justify-between hover:bg-slate-50/80 px-2 rounded-xl transition-all cursor-pointer group"
+                className="py-3 flex items-center justify-between hover:bg-finora-bgTeritary/80 px-2 rounded-xl transition-all cursor-pointer group"
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <div
                     className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                      isIncome ? 'bg-emerald-50 text-finora-green' : 'bg-red-50 text-finora-red'
-                    }`}
+                      isIncome ? 'bg-finora-greenLight text-finora-green' : 'bg-finora-redLight text-finora-red'
+                    } dark:bg-finora-bgTeritary`}
                   >
                     {isIncome ? (
                       <ArrowDownLeft className="w-4 h-4" />

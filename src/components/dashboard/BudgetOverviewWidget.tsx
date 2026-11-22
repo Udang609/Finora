@@ -42,7 +42,7 @@ export const BudgetOverviewWidget: React.FC = () => {
         </div>
 
         {/* Big numbers summary */}
-        <div className="grid grid-cols-2 gap-3 p-3.5 bg-finora-bg rounded-xl mb-4 border border-slate-100">
+        <div className="grid grid-cols-2 gap-3 p-3.5 bg-finora-bgTeritary rounded-xl mb-4 border border-finora-border">
           <div>
             <span className="text-[11px] font-medium text-finora-textSecondary">Total Anggaran</span>
             <p className="text-sm sm:text-base font-bold text-finora-textPrimary">{formatIDR(totalBudgeted)}</p>
@@ -59,7 +59,7 @@ export const BudgetOverviewWidget: React.FC = () => {
             <span className="text-finora-textSecondary">Pemakaian Total</span>
             <span className="text-finora-textPrimary font-semibold">{overallPercentage}%</span>
           </div>
-          <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+          <div className="w-full bg-finora-border rounded-full h-2.5 overflow-hidden">
             <div
               className={`h-full rounded-full transition-all duration-500 ${
                 overallPercentage >= 100
@@ -94,11 +94,11 @@ export const BudgetOverviewWidget: React.FC = () => {
                 <div key={item.id} className="text-xs">
                   <div className="flex justify-between items-center mb-1">
                     <span className="font-medium text-finora-textPrimary truncate">{item.category}</span>
-                    <span className="text-slate-500 font-medium">
+                    <span className="text-finora-textMuted font-medium">
                       {formatIDR(spent)} / {formatIDR(item.amount)}
                     </span>
                   </div>
-                  <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                  <div className="w-full bg-finora-border rounded-full h-2 overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all duration-300 ${statusColor}`}
                       style={{ width: `${Math.min(100, percent)}%` }}
@@ -111,7 +111,7 @@ export const BudgetOverviewWidget: React.FC = () => {
         )}
       </div>
 
-      <div className="pt-4 border-t border-slate-100 mt-4 text-center">
+      <div className="pt-4 border-t border-finora-border mt-4 text-center">
         <button
           onClick={() => setActivePage('budget')}
           className="text-xs font-medium text-finora-textSecondary hover:text-finora-primary transition-colors"
