@@ -60,7 +60,7 @@ export const SavingsAdjustModal: React.FC<SavingsAdjustModalProps> = ({
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Toggle Mode */}
-        <div className="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-xl">
+        <div className="grid grid-cols-2 gap-2 p-1 bg-finora-bgTeritary rounded-xl">
           <button
             type="button"
             onClick={() => {
@@ -70,7 +70,7 @@ export const SavingsAdjustModal: React.FC<SavingsAdjustModalProps> = ({
             className={`py-2 text-xs font-bold rounded-lg flex items-center justify-center gap-1.5 transition-all ${
               mode === 'add'
                 ? 'bg-finora-purple text-white shadow-sm'
-                : 'text-slate-600 hover:text-slate-900'
+                : 'text-finora-textSecondary hover:text-finora-textPrimary'
             }`}
           >
             <PlusCircle className="w-3.5 h-3.5" />
@@ -84,8 +84,8 @@ export const SavingsAdjustModal: React.FC<SavingsAdjustModalProps> = ({
             }}
             className={`py-2 text-xs font-bold rounded-lg flex items-center justify-center gap-1.5 transition-all ${
               mode === 'deduct'
-                ? 'bg-slate-700 text-white shadow-sm'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-finora-textPrimary text-white shadow-sm'
+                : 'text-finora-textSecondary hover:text-finora-textPrimary'
             }`}
           >
             <MinusCircle className="w-3.5 h-3.5" />
@@ -99,7 +99,7 @@ export const SavingsAdjustModal: React.FC<SavingsAdjustModalProps> = ({
             Nominal {mode === 'add' ? 'Tambahan' : 'Pengurangan'} (IDR)
           </label>
           <div className="relative">
-            <span className="absolute left-3.5 top-2.5 text-xs sm:text-sm font-semibold text-slate-400">
+            <span className="absolute left-3.5 top-2.5 text-xs sm:text-sm font-semibold text-finora-textMuted">
               Rp
             </span>
             <input
@@ -111,10 +111,10 @@ export const SavingsAdjustModal: React.FC<SavingsAdjustModalProps> = ({
               }}
               placeholder="0"
               autoFocus
-              className="w-full pl-10 pr-3.5 py-2.5 text-xs sm:text-sm font-semibold rounded-btn border border-finora-border focus:outline-none focus:ring-2 focus:ring-finora-purple"
+              className="input-field pl-10"
             />
           </div>
-          {error && <p className="text-[11px] text-red-500 mt-1">{error}</p>}
+          {error && <p className="text-[11px] text-finora-red mt-1">{error}</p>}
         </div>
 
         {/* Quick Amount Chips */}
@@ -127,7 +127,7 @@ export const SavingsAdjustModal: React.FC<SavingsAdjustModalProps> = ({
                 setAmountStr(val.toString());
                 setError('');
               }}
-              className="text-[11px] font-medium px-2 py-1 bg-purple-50 text-finora-purple hover:bg-purple-100 rounded-md transition-colors"
+              className="text-[11px] font-medium px-2 py-1 bg-finora-purpleLight text-finora-purple hover:bg-finora-purpleLight/80 dark:hover:bg-finora-purple-light/80 rounded-md transition-colors"
             >
               +{formatIDR(val, false)}
             </button>
@@ -135,16 +135,16 @@ export const SavingsAdjustModal: React.FC<SavingsAdjustModalProps> = ({
         </div>
 
         {/* Preview change */}
-        <div className="p-3 bg-slate-50 rounded-xl border border-slate-100 text-xs space-y-1">
-          <div className="flex justify-between text-slate-500">
+        <div className="p-3 bg-finora-bgTeritary rounded-xl border border-finora-border text-xs space-y-1">
+          <div className="flex justify-between text-finora-textSecondary">
             <span>Terkumpul Sekarang:</span>
-            <span className="font-semibold text-slate-700">{formatIDR(goal.currentAmount)}</span>
+            <span className="font-semibold text-finora-textPrimary">{formatIDR(goal.currentAmount)}</span>
           </div>
-          <div className="flex justify-between text-slate-500">
+          <div className="flex justify-between text-finora-textSecondary">
             <span>Setelah Penyesuaian:</span>
             <span className="font-bold text-finora-purple">{formatIDR(projectedAmount)}</span>
           </div>
-          <div className="flex justify-between text-slate-500 pt-1 border-t border-slate-200">
+          <div className="flex justify-between text-finora-textSecondary pt-1 border-t border-finora-border">
             <span>Target Akhir:</span>
             <span className="font-semibold">{formatIDR(goal.targetAmount)}</span>
           </div>
@@ -154,11 +154,7 @@ export const SavingsAdjustModal: React.FC<SavingsAdjustModalProps> = ({
           <Button type="button" variant="outline" size="md" onClick={onClose}>
             Batal
           </Button>
-          <Button
-            type="submit"
-            size="md"
-            className="bg-finora-purple hover:bg-purple-700 text-white"
-          >
+          <Button type="submit" size="md" variant="primary" style={{ backgroundColor: 'rgb(var(--finora-purple))' }}>
             Konfirmasi
           </Button>
         </div>

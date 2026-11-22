@@ -94,7 +94,7 @@ export const BudgetModal: React.FC<BudgetModalProps> = ({
             value={category}
             onChange={(e) => setCategory(e.target.value as Category)}
             disabled={!!editingBudget}
-            className="w-full px-3 py-2.5 text-xs sm:text-sm rounded-btn border border-finora-border bg-white text-finora-textPrimary focus:outline-none focus:ring-2 focus:ring-finora-primary disabled:bg-slate-100 disabled:cursor-not-allowed"
+            className="input-field disabled:bg-finora-bgTeritary disabled:cursor-not-allowed"
           >
             {EXPENSE_CATEGORIES.map((cat) => (
               <option key={cat} value={cat}>
@@ -110,7 +110,7 @@ export const BudgetModal: React.FC<BudgetModalProps> = ({
             Batas Nominal Anggaran (IDR) <span className="text-red-500">*</span>
           </label>
           <div className="relative">
-            <span className="absolute left-3.5 top-2.5 text-xs sm:text-sm font-semibold text-slate-400">
+            <span className="absolute left-3.5 top-2.5 text-xs sm:text-sm font-semibold text-finora-textMuted">
               Rp
             </span>
             <input
@@ -118,10 +118,10 @@ export const BudgetModal: React.FC<BudgetModalProps> = ({
               value={amountStr ? new Intl.NumberFormat('id-ID').format(numericAmount) : ''}
               onChange={(e) => setAmountStr(parseNumberInput(e.target.value).toString())}
               placeholder="0"
-              className="w-full pl-10 pr-3.5 py-2.5 text-xs sm:text-sm font-semibold text-finora-textPrimary rounded-btn border border-finora-border focus:outline-none focus:ring-2 focus:ring-finora-primary"
+              className="input-field pl-10"
             />
           </div>
-          {error && <p className="text-[11px] text-red-500 mt-1">{error}</p>}
+          {error && <p className="text-[11px] text-finora-red mt-1">{error}</p>}
         </div>
 
         {/* Bulan & Tahun */}
@@ -134,7 +134,7 @@ export const BudgetModal: React.FC<BudgetModalProps> = ({
               value={month}
               onChange={(e) => setMonth(Number(e.target.value))}
               disabled={!!editingBudget}
-              className="w-full px-3 py-2 text-xs sm:text-sm rounded-btn border border-finora-border bg-white text-finora-textPrimary focus:outline-none focus:ring-2 focus:ring-finora-primary disabled:bg-slate-100"
+              className="input-field disabled:bg-finora-bgTeritary"
             >
               {INDONESIAN_MONTHS.map((m, idx) => (
                 <option key={m} value={idx + 1}>
@@ -152,7 +152,7 @@ export const BudgetModal: React.FC<BudgetModalProps> = ({
               value={year}
               onChange={(e) => setYear(Number(e.target.value))}
               disabled={!!editingBudget}
-              className="w-full px-3 py-2 text-xs sm:text-sm rounded-btn border border-finora-border bg-white text-finora-textPrimary focus:outline-none focus:ring-2 focus:ring-finora-primary disabled:bg-slate-100"
+              className="input-field disabled:bg-finora-bgTeritary"
             >
               <option value={2025}>2025</option>
               <option value={2026}>2026</option>

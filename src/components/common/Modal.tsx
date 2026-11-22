@@ -47,7 +47,7 @@ export const Modal: React.FC<ModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in duration-200">
       {/* Backdrop */}
       <div 
-        className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity" 
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" 
         onClick={onClose}
         aria-hidden="true"
       />
@@ -57,10 +57,10 @@ export const Modal: React.FC<ModalProps> = ({
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-headline"
-        className={`relative w-full ${maxWidthClass} bg-white rounded-t-2xl sm:rounded-card shadow-soft-lg border border-finora-border overflow-hidden z-10 max-h-[92vh] sm:max-h-[88vh] flex flex-col transform transition-all`}
+        className={`relative w-full ${maxWidthClass} card rounded-t-2xl sm:rounded-card shadow-soft-lg border border-finora-border overflow-hidden z-10 max-h-[92vh] sm:max-h-[88vh] flex flex-col transform transition-all`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-finora-border bg-white sticky top-0 z-10">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-finora-border bg-finora-bgSecondary sticky top-0 z-10">
           <div>
             <h3 id="modal-headline" className="text-lg font-semibold text-finora-textPrimary">
               {title}
@@ -71,7 +71,7 @@ export const Modal: React.FC<ModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-finora-textSecondary hover:text-finora-textPrimary hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-finora-primary"
+            className="p-1.5 rounded-lg text-finora-textSecondary hover:text-finora-textPrimary hover:bg-finora-bgTeritary transition-colors focus:outline-none focus:ring-2 focus:ring-finora-primary"
             aria-label="Tutup modal"
           >
             <X className="w-5 h-5" />

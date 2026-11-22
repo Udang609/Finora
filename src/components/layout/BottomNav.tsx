@@ -11,7 +11,7 @@ export const BottomNav: React.FC = () => {
 
   return (
     <>
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-finora-border px-4 py-2 flex items-center justify-around shadow-lg">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-finora-bgSecondary/95 backdrop-blur-md border-t border-finora-border px-4 py-2 flex items-center justify-around shadow-soft-lg">
         {/* Dashboard */}
         <button
           onClick={() => setActivePage('dashboard')}

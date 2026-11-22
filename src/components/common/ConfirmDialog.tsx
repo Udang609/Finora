@@ -30,7 +30,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
     <Modal isOpen={isOpen} onClose={onClose} title={title} maxWidth="sm">
       <div className="flex flex-col items-center text-center py-2">
         <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-4 ${
-          variant === 'danger' ? 'bg-red-50 text-finora-red' : 'bg-blue-50 text-finora-primary'
+          variant === 'danger' ? 'bg-finora-redLight text-finora-red' : 'bg-finora-lightBlue text-finora-primary'
         }`}>
           {variant === 'danger' ? (
             <Trash2 className="w-6 h-6 text-finora-red" />

@@ -19,7 +19,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   actionIcon,
 }) => {
   return (
-    <div className="flex flex-col items-center justify-center p-8 sm:p-12 text-center bg-white rounded-card border border-finora-border shadow-soft">
+    <div className="flex flex-col items-center justify-center p-8 sm:p-12 text-center card card-hover">
       {icon && (
         <div className="w-14 h-14 rounded-2xl bg-finora-lightBlue text-finora-primary flex items-center justify-center mb-4">
           {icon}

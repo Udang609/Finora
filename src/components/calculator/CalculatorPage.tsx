@@ -209,10 +209,10 @@ export const CalculatorPage: React.FC = () => {
                   }
                 }}
                 placeholder="Contoh: 15"
-                className="w-full pl-3 pr-8 py-2 text-sm rounded-lg border border-slate-200 bg-white text-finora-textPrimary placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-finora-orange/30 focus:border-finora-orange transition-all"
+                className="input-field pl-3 pr-8"
                 aria-label="Persentase diskon"
               />
-              <span className="absolute inset-y-0 right-0 pr-3 flex items-center text-xs font-semibold text-slate-400 pointer-events-none">
+              <span className="absolute inset-y-0 right-0 pr-3 flex items-center text-xs font-semibold text-finora-textMuted pointer-events-none">
                 %
               </span>
             </div>
@@ -229,7 +229,7 @@ export const CalculatorPage: React.FC = () => {
               <button
                 type="button"
                 onClick={handleClearDiscount}
-                className="p-2 rounded-lg text-slate-500 hover:bg-slate-200 transition-colors"
+                className="p-2 rounded-lg text-finora-textMuted hover:bg-finora-bgTeritary transition-colors"
                 title="Hapus diskon"
                 aria-label="Hapus diskon"
               >
@@ -243,7 +243,7 @@ export const CalculatorPage: React.FC = () => {
           )}
 
           {appliedDiscount !== null && discountBase !== null && (
-            <p className="text-[11px] text-slate-500 mt-1.5">
+            <p className="text-[11px] text-finora-textSecondary mt-1.5">
               Harga awal {formatIDR(discountBase)} dipotong {appliedDiscount}% menjadi {formatIDR(Number(displayResult) || 0)}.
             </p>
           )}
@@ -254,25 +254,25 @@ export const CalculatorPage: React.FC = () => {
           {/* Row 1 */}
           <button
             onClick={handleClear}
-            className="py-3.5 rounded-xl bg-red-50 text-finora-red font-bold text-sm hover:bg-red-100 transition-colors flex items-center justify-center"
+            className="py-3.5 rounded-xl bg-finora-redLight text-finora-red font-bold text-sm hover:bg-finora-redLight/80 dark:hover:bg-finora-red-light/80 transition-colors flex items-center justify-center"
           >
             C
           </button>
           <button
             onClick={handleDelete}
-            className="py-3.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-sm hover:bg-slate-200 transition-colors flex items-center justify-center"
+            className="py-3.5 rounded-xl bg-finora-bgTeritary text-finora-textPrimary font-bold text-sm hover:bg-finora-border transition-colors flex items-center justify-center"
           >
             <Delete className="w-4 h-4" />
           </button>
           <button
             onClick={() => handleInput('%')}
-            className="py-3.5 rounded-xl bg-blue-50 text-finora-primary font-bold text-sm hover:bg-blue-100 transition-colors flex items-center justify-center"
+            className="py-3.5 rounded-xl bg-finora-lightBlue text-finora-primary font-bold text-sm hover:bg-finora-lightBlue/80 dark:hover:bg-finora-light-blue/80 transition-colors flex items-center justify-center"
           >
             <Percent className="w-4 h-4" />
           </button>
           <button
             onClick={() => handleInput('÷')}
-            className="py-3.5 rounded-xl bg-blue-50 text-finora-primary font-bold text-base hover:bg-blue-100 transition-colors"
+            className="py-3.5 rounded-xl bg-finora-lightBlue text-finora-primary font-bold text-base hover:bg-finora-lightBlue/80 dark:hover:bg-finora-light-blue/80 transition-colors"
           >
             ÷
           </button>
@@ -280,25 +280,25 @@ export const CalculatorPage: React.FC = () => {
           {/* Row 2 */}
           <button
             onClick={() => handleInput('7')}
-            className="py-3.5 rounded-xl bg-white border border-slate-200 text-slate-800 font-bold text-base hover:bg-slate-50 transition-colors shadow-sm"
+            className="py-3.5 rounded-xl bg-finora-bgSecondary border border-finora-border text-finora-textPrimary font-bold text-base hover:bg-finora-bgTeritary transition-colors shadow-sm"
           >
             7
           </button>
           <button
             onClick={() => handleInput('8')}
-            className="py-3.5 rounded-xl bg-white border border-slate-200 text-slate-800 font-bold text-base hover:bg-slate-50 transition-colors shadow-sm"
+            className="py-3.5 rounded-xl bg-finora-bgSecondary border border-finora-border text-finora-textPrimary font-bold text-base hover:bg-finora-bgTeritary transition-colors shadow-sm"
           >
             8
           </button>
           <button
             onClick={() => handleInput('9')}
-            className="py-3.5 rounded-xl bg-white border border-slate-200 text-slate-800 font-bold text-base hover:bg-slate-50 transition-colors shadow-sm"
+            className="py-3.5 rounded-xl bg-finora-bgSecondary border border-finora-border text-finora-textPrimary font-bold text-base hover:bg-finora-bgTeritary transition-colors shadow-sm"
           >
             9
           </button>
           <button
             onClick={() => handleInput('×')}
-            className="py-3.5 rounded-xl bg-blue-50 text-finora-primary font-bold text-base hover:bg-blue-100 transition-colors"
+            className="py-3.5 rounded-xl bg-finora-lightBlue text-finora-primary font-bold text-base hover:bg-finora-lightBlue/80 dark:hover:bg-finora-light-blue/80 transition-colors"
           >
             ×
           </button>
@@ -306,25 +306,25 @@ export const CalculatorPage: React.FC = () => {
           {/* Row 3 */}
           <button
             onClick={() => handleInput('4')}
-            className="py-3.5 rounded-xl bg-white border border-slate-200 text-slate-800 font-bold text-base hover:bg-slate-50 transition-colors shadow-sm"
+            className="py-3.5 rounded-xl bg-finora-bgSecondary border border-finora-border text-finora-textPrimary font-bold text-base hover:bg-finora-bgTeritary transition-colors shadow-sm"
           >
             4
           </button>
           <button
             onClick={() => handleInput('5')}
-            className="py-3.5 rounded-xl bg-white border border-slate-200 text-slate-800 font-bold text-base hover:bg-slate-50 transition-colors shadow-sm"
+            className="py-3.5 rounded-xl bg-finora-bgSecondary border border-finora-border text-finora-textPrimary font-bold text-base hover:bg-finora-bgTeritary transition-colors shadow-sm"
           >
             5
           </button>
           <button
             onClick={() => handleInput('6')}
-            className="py-3.5 rounded-xl bg-white border border-slate-200 text-slate-800 font-bold text-base hover:bg-slate-50 transition-colors shadow-sm"
+            className="py-3.5 rounded-xl bg-finora-bgSecondary border border-finora-border text-finora-textPrimary font-bold text-base hover:bg-finora-bgTeritary transition-colors shadow-sm"
           >
             6
           </button>
           <button
             onClick={() => handleInput('-')}
-            className="py-3.5 rounded-xl bg-blue-50 text-finora-primary font-bold text-base hover:bg-blue-100 transition-colors"
+            className="py-3.5 rounded-xl bg-finora-lightBlue text-finora-primary font-bold text-base hover:bg-finora-lightBlue/80 dark:hover:bg-finora-light-blue/80 transition-colors"
           >
             -
           </button>
@@ -332,25 +332,25 @@ export const CalculatorPage: React.FC = () => {
           {/* Row 4 */}
           <button
             onClick={() => handleInput('1')}
-            className="py-3.5 rounded-xl bg-white border border-slate-200 text-slate-800 font-bold text-base hover:bg-slate-50 transition-colors shadow-sm"
+            className="py-3.5 rounded-xl bg-finora-bgSecondary border border-finora-border text-finora-textPrimary font-bold text-base hover:bg-finora-bgTeritary transition-colors shadow-sm"
           >
             1
           </button>
           <button
             onClick={() => handleInput('2')}
-            className="py-3.5 rounded-xl bg-white border border-slate-200 text-slate-800 font-bold text-base hover:bg-slate-50 transition-colors shadow-sm"
+            className="py-3.5 rounded-xl bg-finora-bgSecondary border border-finora-border text-finora-textPrimary font-bold text-base hover:bg-finora-bgTeritary transition-colors shadow-sm"
           >
             2
           </button>
           <button
             onClick={() => handleInput('3')}
-            className="py-3.5 rounded-xl bg-white border border-slate-200 text-slate-800 font-bold text-base hover:bg-slate-50 transition-colors shadow-sm"
+            className="py-3.5 rounded-xl bg-finora-bgSecondary border border-finora-border text-finora-textPrimary font-bold text-base hover:bg-finora-bgTeritary transition-colors shadow-sm"
           >
             3
           </button>
           <button
             onClick={() => handleInput('+')}
-            className="py-3.5 rounded-xl bg-blue-50 text-finora-primary font-bold text-base hover:bg-blue-100 transition-colors"
+            className="py-3.5 rounded-xl bg-finora-lightBlue text-finora-primary font-bold text-base hover:bg-finora-lightBlue/80 dark:hover:bg-finora-light-blue/80 transition-colors"
           >
             +
           </button>
@@ -358,19 +358,19 @@ export const CalculatorPage: React.FC = () => {
           {/* Row 5 */}
           <button
             onClick={() => handleInput('0')}
-            className="py-3.5 rounded-xl bg-white border border-slate-200 text-slate-800 font-bold text-base hover:bg-slate-50 transition-colors shadow-sm"
+            className="py-3.5 rounded-xl bg-finora-bgSecondary border border-finora-border text-finora-textPrimary font-bold text-base hover:bg-finora-bgTeritary transition-colors shadow-sm"
           >
             0
           </button>
           <button
             onClick={() => handleInput('00')}
-            className="py-3.5 rounded-xl bg-white border border-slate-200 text-slate-800 font-bold text-base hover:bg-slate-50 transition-colors shadow-sm"
+            className="py-3.5 rounded-xl bg-finora-bgSecondary border border-finora-border text-finora-textPrimary font-bold text-base hover:bg-finora-bgTeritary transition-colors shadow-sm"
           >
             00
           </button>
           <button
             onClick={() => handleInput('.')}
-            className="py-3.5 rounded-xl bg-white border border-slate-200 text-slate-800 font-bold text-base hover:bg-slate-50 transition-colors shadow-sm"
+            className="py-3.5 rounded-xl bg-finora-bgSecondary border border-finora-border text-finora-textPrimary font-bold text-base hover:bg-finora-bgTeritary transition-colors shadow-sm"
           >
             .
           </button>
@@ -383,7 +383,7 @@ export const CalculatorPage: React.FC = () => {
         </div>
 
         {/* Integration Button with Transactions */}
-        <div className="mt-5 pt-4 border-t border-slate-100">
+        <div className="mt-5 pt-4 border-t border-finora-border">
           <Button
             type="button"
             variant="secondary"
@@ -395,7 +395,7 @@ export const CalculatorPage: React.FC = () => {
             <ArrowRightCircle className="w-4 h-4" />
             <span>Gunakan untuk Transaksi ({formatIDR(Math.max(0, numericResult))})</span>
           </Button>
-          <p className="text-[11px] text-center text-slate-400 mt-2">
+          <p className="text-[11px] text-center text-finora-textMuted mt-2">
             * Mengisi otomatis nominal di formulir transaksi tanpa menyimpannya langsung.
           </p>
         </div>

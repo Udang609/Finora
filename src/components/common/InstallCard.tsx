@@ -22,7 +22,7 @@ export const InstallCard: React.FC = () => {
   };
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-4">
+    <div className="card card-hover p-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-start gap-3">
           <div className="w-10 h-10 rounded-xl bg-finora-lightBlue text-finora-primary flex items-center justify-center flex-shrink-0">
@@ -32,7 +32,7 @@ export const InstallCard: React.FC = () => {
             <p className="text-xs sm:text-sm font-semibold text-finora-textPrimary">
               Pasang Finora di Perangkat
             </p>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-finora-textSecondary mt-0.5">
               {isInstalled
                 ? 'Aplikasi berjalan penuh dari layar utama.'
                 : 'Buka layar penuh tanpa tab browser, data tetap tersimpan di perangkat.'}
@@ -41,7 +41,7 @@ export const InstallCard: React.FC = () => {
         </div>
 
         {isInstalled ? (
-          <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-lg self-start sm:self-auto">
+          <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-finora-green bg-finora-greenLight border border-finora-green px-3 py-1.5 rounded-lg self-start sm:self-auto">
             <CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" />
             Terpasang
           </span>
@@ -61,7 +61,7 @@ export const InstallCard: React.FC = () => {
       </div>
 
       {!isInstalled && !canInstall && isIos && (
-        <div className="mt-3 pt-3 border-t border-slate-100 text-xs text-slate-600 space-y-1.5">
+        <div className="mt-3 pt-3 border-t border-finora-border text-xs text-finora-textSecondary space-y-1.5">
           <p className="flex items-center gap-1.5 font-medium text-finora-textPrimary">
             <Share className="w-3.5 h-3.5 text-finora-primary" aria-hidden="true" />
             Lewat Safari:
@@ -72,7 +72,7 @@ export const InstallCard: React.FC = () => {
       )}
 
       {!isInstalled && !canInstall && !isIos && (
-        <p className="mt-3 pt-3 border-t border-slate-100 text-xs text-slate-600">
+        <p className="mt-3 pt-3 border-t border-finora-border text-xs text-finora-textSecondary">
           Buka menu browser, pilih Pasang aplikasi, lalu konfirmasi. Jika opsi itu belum muncul,
           muat ulang halaman ini.
         </p>

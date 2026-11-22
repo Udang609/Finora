@@ -105,11 +105,9 @@ export const SavingsModal: React.FC<SavingsModalProps> = ({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Contoh: Membeli Laptop, Liburan ke Bali, Dana Darurat"
-            className={`w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-btn border ${
-              errors.title ? 'border-red-500' : 'border-finora-border'
-            } focus:outline-none focus:ring-2 focus:ring-finora-primary`}
+            className={`input-field ${errors.title ? 'border-finora-red focus:ring-finora-red' : ''}`}
           />
-          {errors.title && <p className="text-[11px] text-red-500 mt-1">{errors.title}</p>}
+          {errors.title && <p className="text-[11px] text-finora-red mt-1">{errors.title}</p>}
         </div>
 
         {/* Target Amount */}
@@ -118,7 +116,7 @@ export const SavingsModal: React.FC<SavingsModalProps> = ({
             Target Nominal (IDR) <span className="text-red-500">*</span>
           </label>
           <div className="relative">
-            <span className="absolute left-3.5 top-2.5 text-xs sm:text-sm font-semibold text-slate-400">
+            <span className="absolute left-3.5 top-2.5 text-xs sm:text-sm font-semibold text-finora-textMuted">
               Rp
             </span>
             <input
@@ -126,12 +124,10 @@ export const SavingsModal: React.FC<SavingsModalProps> = ({
               value={targetAmountStr ? new Intl.NumberFormat('id-ID').format(numericTarget) : ''}
               onChange={(e) => setTargetAmountStr(parseNumberInput(e.target.value).toString())}
               placeholder="0"
-              className={`w-full pl-10 pr-3.5 py-2.5 text-xs sm:text-sm font-semibold rounded-btn border ${
-                errors.targetAmount ? 'border-red-500' : 'border-finora-border'
-              } focus:outline-none focus:ring-2 focus:ring-finora-primary`}
+              className={`input-field pl-10 ${errors.targetAmount ? 'border-finora-red focus:ring-finora-red' : ''}`}
             />
           </div>
-          {errors.targetAmount && <p className="text-[11px] text-red-500 mt-1">{errors.targetAmount}</p>}
+          {errors.targetAmount && <p className="text-[11px] text-finora-red mt-1">{errors.targetAmount}</p>}
         </div>
 
         {/* Initial / Current Amount */}
@@ -140,7 +136,7 @@ export const SavingsModal: React.FC<SavingsModalProps> = ({
             Jumlah Terkumpul Saat Ini (IDR)
           </label>
           <div className="relative">
-            <span className="absolute left-3.5 top-2.5 text-xs sm:text-sm font-semibold text-slate-400">
+            <span className="absolute left-3.5 top-2.5 text-xs sm:text-sm font-semibold text-finora-textMuted">
               Rp
             </span>
             <input
@@ -148,10 +144,10 @@ export const SavingsModal: React.FC<SavingsModalProps> = ({
               value={currentAmountStr ? new Intl.NumberFormat('id-ID').format(numericCurrent) : '0'}
               onChange={(e) => setCurrentAmountStr(parseNumberInput(e.target.value).toString())}
               placeholder="0"
-              className="w-full pl-10 pr-3.5 py-2.5 text-xs sm:text-sm font-semibold rounded-btn border border-finora-border focus:outline-none focus:ring-2 focus:ring-finora-primary"
+              className="input-field pl-10"
             />
           </div>
-          <p className="text-[11px] text-slate-400 mt-1">
+          <p className="text-[11px] text-finora-textMuted mt-1">
             * Tabungan bersifat pencatatan virtual dan tidak memotong saldo utama.
           </p>
         </div>
@@ -165,7 +161,7 @@ export const SavingsModal: React.FC<SavingsModalProps> = ({
             type="date"
             value={targetDate}
             onChange={(e) => setTargetDate(e.target.value)}
-            className="w-full px-3 py-2 text-xs sm:text-sm rounded-btn border border-finora-border bg-white text-finora-textPrimary focus:outline-none focus:ring-2 focus:ring-finora-primary"
+            className="input-field"
           />
         </div>
 
@@ -179,7 +175,7 @@ export const SavingsModal: React.FC<SavingsModalProps> = ({
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="Tujuan tabungan atau rincian rencana..."
-            className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-btn border border-finora-border focus:outline-none focus:ring-2 focus:ring-finora-primary"
+            className="input-field resize-y"
           />
         </div>
 

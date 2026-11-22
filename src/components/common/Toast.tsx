@@ -18,23 +18,23 @@ export const ToastContainer: React.FC = () => {
             key={toast.id}
             role="status"
             aria-live="polite"
-            className={`pointer-events-auto flex items-center justify-between p-3.5 rounded-xl border shadow-soft-lg bg-white transition-all transform animate-in slide-in-from-bottom-3 duration-200 ${
+            className={`pointer-events-auto flex items-center justify-between p-3.5 rounded-xl border shadow-soft-lg card transition-all transform animate-in slide-in-from-bottom-3 duration-200 ${
               isSuccess
-                ? 'border-emerald-200 text-slate-800'
+                ? 'border-finora-green/30'
                 : isError
-                ? 'border-red-200 text-slate-800'
-                : 'border-blue-200 text-slate-800'
+                ? 'border-finora-red/30'
+                : 'border-finora-primary/30'
             }`}
           >
             <div className="flex items-center gap-3">
               {isSuccess && <CheckCircle2 className="w-5 h-5 text-finora-green flex-shrink-0" />}
               {isError && <AlertCircle className="w-5 h-5 text-finora-red flex-shrink-0" />}
               {!isSuccess && !isError && <Info className="w-5 h-5 text-finora-primary flex-shrink-0" />}
-              <span className="text-xs sm:text-sm font-medium">{toast.message}</span>
+              <span className="text-xs sm:text-sm font-medium text-finora-textPrimary">{toast.message}</span>
             </div>
             <button
               onClick={() => removeToast(toast.id)}
-              className="text-slate-400 hover:text-slate-600 p-1 rounded-md transition-colors ml-2"
+              className="text-finora-textMuted hover:text-finora-textPrimary p-1 rounded-md transition-colors ml-2"
               aria-label="Tutup notifikasi"
             >
               <X className="w-4 h-4" />

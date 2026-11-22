@@ -59,7 +59,7 @@ export const TransactionDetailModal: React.FC<TransactionDetailModalProps> = ({
           {/* Main Amount Card */}
           <div
             className={`p-5 rounded-2xl flex flex-col items-center justify-center text-center ${
-              isIncome ? 'bg-emerald-50 text-emerald-950' : 'bg-red-50 text-red-950'
+              isIncome ? 'bg-finora-greenLight text-finora-green' : 'bg-finora-redLight text-finora-red'
             }`}
           >
             <div
@@ -79,14 +79,14 @@ export const TransactionDetailModal: React.FC<TransactionDetailModalProps> = ({
             >
               {isIncome ? `+${formatIDR(transaction.amount)}` : `-${formatIDR(transaction.amount)}`}
             </h2>
-            <p className="text-sm font-semibold text-slate-800 mt-1">{transaction.title}</p>
+            <p className="text-sm font-semibold text-finora-textPrimary mt-1">{transaction.title}</p>
           </div>
 
           {/* Details List */}
-          <div className="bg-slate-50 rounded-xl p-4 space-y-3 border border-slate-100 text-xs sm:text-sm">
+          <div className="bg-finora-bgTeritary rounded-xl p-4 space-y-3 border border-finora-border text-xs sm:text-sm">
             <div className="flex items-center justify-between">
               <span className="text-finora-textSecondary flex items-center gap-2">
-                <Tag className="w-4 h-4 text-slate-400" />
+                <Tag className="w-4 h-4 text-finora-textMuted" />
                 Kategori
               </span>
               <span className={`px-2.5 py-1 rounded-md text-xs font-medium border ${catColor.bg} ${catColor.text} ${catColor.border}`}>
@@ -96,7 +96,7 @@ export const TransactionDetailModal: React.FC<TransactionDetailModalProps> = ({
 
             <div className="flex items-center justify-between">
               <span className="text-finora-textSecondary flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-slate-400" />
+                <Calendar className="w-4 h-4 text-finora-textMuted" />
                 Tanggal Transaksi
               </span>
               <span className="font-semibold text-finora-textPrimary">
@@ -105,12 +105,12 @@ export const TransactionDetailModal: React.FC<TransactionDetailModalProps> = ({
             </div>
 
             {transaction.notes && (
-              <div className="pt-2 border-t border-slate-200">
+              <div className="pt-2 border-t border-finora-border">
                 <span className="text-finora-textSecondary flex items-center gap-2 mb-1">
-                  <FileText className="w-4 h-4 text-slate-400" />
+                  <FileText className="w-4 h-4 text-finora-textMuted" />
                   Catatan
                 </span>
-                <p className="text-xs text-finora-textPrimary bg-white p-2.5 rounded-lg border border-slate-200">
+                <p className="text-xs text-finora-textPrimary bg-finora-bgSecondary p-2.5 rounded-lg border border-finora-border">
                   {transaction.notes}
                 </p>
               </div>
@@ -152,11 +152,10 @@ export const TransactionDetailModal: React.FC<TransactionDetailModalProps> = ({
         onClose={() => setIsConfirmDeleteOpen(false)}
         onConfirm={handleConfirmDelete}
         title="Hapus Transaksi?"
-        message={`Apakah Anda yakin ingin menghapus transaksi "${transaction.title}" sebesar ${formatIDR(
-          transaction.amount
-        )}? Data yang dihapus tidak dapat dipulihkan.`}
+        message={`Apakah Anda yakin ingin menghapus "${transaction.title}"? Tindakan ini tidak bisa dibatalkan.`}
         confirmText="Ya, Hapus"
         cancelText="Batal"
+        variant="danger"
       />
     </>
   );
