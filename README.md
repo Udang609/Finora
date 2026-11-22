@@ -75,6 +75,39 @@ Finora memecahkan masalah ini dengan:
 - Pengaturan profil: Nama pengguna dan pilihan Avatar.
 - Opsi **Keluar / Ganti Pengguna:** Kembali ke layar login dengan data lokal tetap terlindungi.
 - Opsi **Bersihkan Data:** Mengosongkan seluruh catatan transaksi, anggaran, dan tabungan agar akun kembali bersih.
+- **Sinkronisasi Cloud (Opsional):** Aktifkan di tab "Akun & Sesi" untuk sinkron data real-time ke Firebase Firestore. Bisa diakses dari HP, laptop, dan tablet lain dengan nama yang sama. Data tetap tersimpan lokal sebagai cadangan offline.
+
+---
+
+## ☁️ Sinkronisasi Cloud (Multi-Perangkat)
+
+Finora mendukung **sinkronisasi real-time antar perangkat** melalui Firebase Firestore (gratis hingga 1 GB/bulan).
+
+### Cara Mengaktifkan
+1. Buat project di [Firebase Console](https://console.firebase.google.com/).
+2. Aktifkan **Authentication** → *Sign-in method* → **Anonymous** (enable).
+3. Aktifkan **Firestore Database** → *Start in test mode* (atau atur rules manual).
+4. Salin konfigurasi Web App ke file `.env` (lihat `.env.example`):
+   ```env
+   VITE_FIREBASE_API_KEY=...
+   VITE_FIREBASE_AUTH_DOMAIN=...
+   VITE_FIREBASE_PROJECT_ID=...
+   VITE_FIREBASE_STORAGE_BUCKET=...
+   VITE_FIREBASE_MESSAGING_SENDER_ID=...
+   VITE_FIREBASE_APP_ID=...
+   ```
+5. Jalankan `npm run dev` atau deploy ulang.
+6. Di aplikasi: **Pengaturan → Akun & Sesi → Sinkronisasi Cloud → Aktifkan**.
+
+### Perilaku
+| Kondisi | Perilaku |
+|---------|----------|
+| **Online + Sync Aktif** | Perubahan langsung terkirim ke cloud, perangkat lain update real-time. |
+| **Offline** | Perubahan tersimpan di `localStorage` lokal. Saat online kembali, Firestore *offline persistence* otomatis sinkronkan. |
+| **Sync Dimatikan** | Aplikasi kembali mode 100% lokal. Data cloud tidak terhapus, hanya tidak dipakai. |
+| **Ganti Nama Pengguna** | Data cloud terikat pada Firebase UID (anonim). Jika login nama beda di perangkat lain, data tidak tercampur. |
+
+> **Catatan:** Tanpa konfigurasi `.env`, opsi sinkronisasi tetap muncul tapi dinonaktifkan. Data Anda tetap aman 100% lokal.
 
 ---
 

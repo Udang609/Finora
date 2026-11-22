@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useMemo, type ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback, type ReactNode } from 'react';
 import type { 
   Transaction, 
   Budget, 
@@ -14,6 +14,22 @@ import {
   INITIAL_SAVINGS_GOALS, 
   INITIAL_USER_PROFILE
 } from '../data/initialData';
+import { useAuth } from './AuthContext';
+import {
+  startSync,
+  stopSync,
+  addTransactionFS,
+  updateTransactionFS,
+  deleteTransactionFS,
+  addBudgetFS,
+  updateBudgetFS,
+  deleteBudgetFS,
+  addSavingsGoalFS,
+  updateSavingsGoalFS,
+  deleteSavingsGoalFS,
+  updateProfileFS,
+  clearAllDataFS,
+} from '../lib/firestoreSync';
 
 interface FinanceContextType {
   // Navigation & View
@@ -29,6 +45,10 @@ interface FinanceContextType {
   userProfile: UserProfile;
   updateUserProfile: (data: Partial<UserProfile>) => void;
   resetAllData: () => void;
+  isSyncEnabled: boolean;
+  setSyncEnabled: (enabled: boolean) => void;
+  syncStatus: 'idle' | 'syncing' | 'error' | 'offline';
+  syncError: string | null;
 
   // Transactions
   transactions: Transaction[];
@@ -77,76 +97,91 @@ const STORAGE_KEYS = {
   SAVINGS: 'finora_savings_v1',
   USER: 'finora_user_v1',
   IS_LOGGED_IN: 'finora_is_logged_in_v1',
+  SYNC_ENABLED: 'finora_sync_enabled_v1',
 };
 
-export const FinanceProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  // --- Auth & User Profile ---
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
-    return localStorage.getItem(STORAGE_KEYS.IS_LOGGED_IN) === 'true';
-  });
+function loadLocalTransactions(): Transaction[] {
+  const saved = localStorage.getItem(STORAGE_KEYS.TRANSACTIONS);
+  if (!saved) return INITIAL_TRANSACTIONS;
+  try {
+    const parsed = JSON.parse(saved);
+    if (Array.isArray(parsed) && parsed.some((t: Transaction) => t.id === 'tx-1' && t.title === 'Gaji Bulanan')) {
+      localStorage.removeItem(STORAGE_KEYS.TRANSACTIONS);
+      return [];
+    }
+    return parsed;
+  } catch {
+    return [];
+  }
+}
 
-  const [userProfile, setUserProfile] = useState<UserProfile>(() => {
-    const saved = localStorage.getItem(STORAGE_KEYS.USER);
-    if (!saved) return INITIAL_USER_PROFILE;
-    try {
-      const parsed = JSON.parse(saved);
-      // Clean legacy placeholder profile if present
-      if (parsed.name === 'Dimas Pratama' && parsed.avatarUrl?.includes('unsplash')) {
-        localStorage.removeItem(STORAGE_KEYS.USER);
-        return INITIAL_USER_PROFILE;
-      }
-      return parsed;
-    } catch {
+function loadLocalBudgets(): Budget[] {
+  const saved = localStorage.getItem(STORAGE_KEYS.BUDGETS);
+  if (!saved) return INITIAL_BUDGETS;
+  try {
+    const parsed = JSON.parse(saved);
+    if (Array.isArray(parsed) && parsed.some((b: Budget) => b.id === 'bg-1' && b.category === 'Makanan & Minuman')) {
+      localStorage.removeItem(STORAGE_KEYS.BUDGETS);
+      return [];
+    }
+    return parsed;
+  } catch {
+    return [];
+  }
+}
+
+function loadLocalSavings(): SavingsGoal[] {
+  const saved = localStorage.getItem(STORAGE_KEYS.SAVINGS);
+  if (!saved) return INITIAL_SAVINGS_GOALS;
+  try {
+    const parsed = JSON.parse(saved);
+    if (Array.isArray(parsed) && parsed.some((s: SavingsGoal) => s.id === 'sg-1' && s.title === 'Membeli Laptop')) {
+      localStorage.removeItem(STORAGE_KEYS.SAVINGS);
+      return [];
+    }
+    return parsed;
+  } catch {
+    return [];
+  }
+}
+
+function loadLocalProfile(): UserProfile {
+  const saved = localStorage.getItem(STORAGE_KEYS.USER);
+  if (!saved) return INITIAL_USER_PROFILE;
+  try {
+    const parsed = JSON.parse(saved);
+    if (parsed.name === 'Dimas Pratama' && parsed.avatarUrl?.includes('unsplash')) {
+      localStorage.removeItem(STORAGE_KEYS.USER);
       return INITIAL_USER_PROFILE;
     }
-  });
+    return parsed;
+  } catch {
+    return INITIAL_USER_PROFILE;
+  }
+}
+
+function loadIsLoggedIn(): boolean {
+  return localStorage.getItem(STORAGE_KEYS.IS_LOGGED_IN) === 'true';
+}
+
+function loadSyncEnabled(): boolean {
+  return localStorage.getItem(STORAGE_KEYS.SYNC_ENABLED) === 'true';
+}
+
+export const FinanceProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const { user: firebaseUser, isConfigured } = useAuth();
+
+  // --- Auth & User Profile ---
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => loadIsLoggedIn());
+  const [userProfile, setUserProfile] = useState<UserProfile>(() => loadLocalProfile());
+  const [isSyncEnabled, setIsSyncEnabled] = useState<boolean>(() => loadSyncEnabled() && isConfigured);
+  const [syncStatus, setSyncStatus] = useState<'idle' | 'syncing' | 'error' | 'offline'>('idle');
+  const [syncError, setSyncError] = useState<string | null>(null);
 
   // --- Core Financial Data ---
-  const [transactions, setTransactions] = useState<Transaction[]>(() => {
-    const saved = localStorage.getItem(STORAGE_KEYS.TRANSACTIONS);
-    if (!saved) return INITIAL_TRANSACTIONS;
-    try {
-      const parsed = JSON.parse(saved);
-      // Clean legacy template dummy data
-      if (Array.isArray(parsed) && parsed.some((t: Transaction) => t.id === 'tx-1' && t.title === 'Gaji Bulanan')) {
-        localStorage.removeItem(STORAGE_KEYS.TRANSACTIONS);
-        return [];
-      }
-      return parsed;
-    } catch {
-      return [];
-    }
-  });
-
-  const [budgets, setBudgets] = useState<Budget[]>(() => {
-    const saved = localStorage.getItem(STORAGE_KEYS.BUDGETS);
-    if (!saved) return INITIAL_BUDGETS;
-    try {
-      const parsed = JSON.parse(saved);
-      if (Array.isArray(parsed) && parsed.some((b: Budget) => b.id === 'bg-1' && b.category === 'Makanan & Minuman')) {
-        localStorage.removeItem(STORAGE_KEYS.BUDGETS);
-        return [];
-      }
-      return parsed;
-    } catch {
-      return [];
-    }
-  });
-
-  const [savingsGoals, setSavingsGoals] = useState<SavingsGoal[]>(() => {
-    const saved = localStorage.getItem(STORAGE_KEYS.SAVINGS);
-    if (!saved) return INITIAL_SAVINGS_GOALS;
-    try {
-      const parsed = JSON.parse(saved);
-      if (Array.isArray(parsed) && parsed.some((s: SavingsGoal) => s.id === 'sg-1' && s.title === 'Membeli Laptop')) {
-        localStorage.removeItem(STORAGE_KEYS.SAVINGS);
-        return [];
-      }
-      return parsed;
-    } catch {
-      return [];
-    }
-  });
+  const [transactions, setTransactions] = useState<Transaction[]>(() => loadLocalTransactions());
+  const [budgets, setBudgets] = useState<Budget[]>(() => loadLocalBudgets());
+  const [savingsGoals, setSavingsGoals] = useState<SavingsGoal[]>(() => loadLocalSavings());
 
   // --- UI Flow & Modals ---
   const [activePage, setActivePage] = useState<ActivePage>('dashboard');
@@ -156,7 +191,10 @@ export const FinanceProvider: React.FC<{ children: ReactNode }> = ({ children })
   const [prefilledAmount, setPrefilledAmount] = useState<number | null>(null);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
-  // Sync to LocalStorage
+  // --- Sync State ---
+  const [syncInitialized, setSyncInitialized] = useState(false);
+
+  // Persist local state (always, as offline cache)
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify(transactions));
   }, [transactions]);
@@ -176,6 +214,10 @@ export const FinanceProvider: React.FC<{ children: ReactNode }> = ({ children })
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.IS_LOGGED_IN, isLoggedIn ? 'true' : 'false');
   }, [isLoggedIn]);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.SYNC_ENABLED, isSyncEnabled ? 'true' : 'false');
+  }, [isSyncEnabled]);
 
   // Toast Helper
   const showToast = (message: string, type: 'success' | 'error' | 'info' = 'success') => {
@@ -206,117 +248,69 @@ export const FinanceProvider: React.FC<{ children: ReactNode }> = ({ children })
   const netCashFlow = totalIncome - totalExpense;
   const totalBalance = netCashFlow;
 
-  // Transaction Actions
-  const addTransaction = (data: Omit<Transaction, 'id' | 'createdAt'>) => {
-    const newTx: Transaction = {
-      ...data,
-      id: 'tx-' + Date.now().toString(),
-      createdAt: new Date().toISOString(),
-    };
-    setTransactions((prev) => [newTx, ...prev]);
-    showToast('Transaksi berhasil disimpan.', 'success');
-  };
+  // --- Sync Logic ---
+  const uid = firebaseUser?.uid;
 
-  const updateTransaction = (id: string, data: Partial<Transaction>) => {
-    setTransactions((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, ...data } : t))
-    );
-    showToast('Transaksi berhasil diperbarui.', 'success');
-  };
+  const initializeSync = useCallback(async () => {
+    if (!isSyncEnabled || !uid || !isConfigured || syncInitialized) return;
+    if (!isLoggedIn) return;
 
-  const deleteTransaction = (id: string) => {
-    setTransactions((prev) => prev.filter((t) => t.id !== id));
-    showToast('Transaksi berhasil dihapus.', 'info');
-  };
+    setSyncInitialized(true);
+    setSyncStatus('syncing');
+    setSyncError(null);
 
-  const openAddTransactionWithAmount = (amount?: number) => {
-    if (typeof amount === 'number') {
-      setPrefilledAmount(amount);
+    try {
+      startSync(uid, {
+        onTransactionsChange: (txs) => {
+          if (txs.length > 0) setTransactions(txs);
+        },
+        onBudgetsChange: (bs) => {
+          if (bs.length > 0) setBudgets(bs);
+        },
+        onSavingsGoalsChange: (gs) => {
+          if (gs.length > 0) setSavingsGoals(gs);
+        },
+        onProfileChange: (profile) => {
+          if (profile) setUserProfile(profile);
+        },
+        onError: (err) => {
+          console.error('Firestore sync error:', err);
+          setSyncStatus('error');
+          setSyncError(err.message);
+          showToast('Sinkronisasi gagal: ' + err.message, 'error');
+        },
+      });
+      setSyncStatus('idle');
+    } catch (err) {
+      console.error('Sync init error:', err);
+      setSyncStatus('error');
+      setSyncError(err instanceof Error ? err.message : 'Unknown error');
     }
-    setEditingTransaction(null);
-    setIsAddTransactionOpen(true);
-  };
+  }, [isSyncEnabled, uid, isConfigured, syncInitialized, isLoggedIn, showToast]);
 
-  // Budget Actions
-  const addBudget = (data: Omit<Budget, 'id'>) => {
-    // Check if category already budgeted for this month/year
-    const exists = budgets.some(
-      (b) => b.category === data.category && b.month === data.month && b.year === data.year
-    );
-    if (exists) {
-      showToast(`Kategori ${data.category} sudah memiliki anggaran di bulan ini.`, 'error');
-      return;
+  const stopSyncIfNeeded = useCallback(() => {
+    if (syncInitialized) {
+      stopSync();
+      setSyncInitialized(false);
+      setSyncStatus('idle');
     }
-    const newBg: Budget = {
-      ...data,
-      id: 'bg-' + Date.now().toString(),
-    };
-    setBudgets((prev) => [...prev, newBg]);
-    showToast('Anggaran berhasil dibuat.', 'success');
-  };
+  }, [syncInitialized]);
 
-  const updateBudget = (id: string, data: Partial<Budget>) => {
-    setBudgets((prev) => prev.map((b) => (b.id === id ? { ...b, ...data } : b)));
-    showToast('Anggaran berhasil diperbarui.', 'success');
-  };
+  // Start/stop sync based on conditions
+  useEffect(() => {
+    if (isSyncEnabled && uid && isLoggedIn) {
+      initializeSync();
+    } else {
+      stopSyncIfNeeded();
+    }
+    return () => stopSyncIfNeeded();
+  }, [isSyncEnabled, uid, isLoggedIn, initializeSync, stopSyncIfNeeded]);
 
-  const deleteBudget = (id: string) => {
-    setBudgets((prev) => prev.filter((b) => b.id !== id));
-    showToast('Anggaran berhasil dihapus.', 'info');
-  };
-
-  const getSpentByCategory = (category: Category, month: number, year: number): number => {
-    return transactions
-      .filter((t) => {
-        if (t.type !== 'expense' || t.category !== category) return false;
-        const [tYear, tMonth] = t.date.split('-').map(Number);
-        return tYear === year && tMonth === month;
-      })
-      .reduce((sum, t) => sum + t.amount, 0);
-  };
-
-  // Savings Goal Actions
-  const addSavingsGoal = (data: Omit<SavingsGoal, 'id' | 'createdAt'>) => {
-    const newGoal: SavingsGoal = {
-      ...data,
-      id: 'sg-' + Date.now().toString(),
-      createdAt: new Date().toISOString(),
-    };
-    setSavingsGoals((prev) => [...prev, newGoal]);
-    showToast('Target tabungan berhasil dibuat.', 'success');
-  };
-
-  const updateSavingsGoal = (id: string, data: Partial<SavingsGoal>) => {
-    setSavingsGoals((prev) =>
-      prev.map((g) => (g.id === id ? { ...g, ...data } : g))
-    );
-    showToast('Target tabungan berhasil diperbarui.', 'success');
-  };
-
-  const adjustSavingsAmount = (id: string, delta: number) => {
-    setSavingsGoals((prev) =>
-      prev.map((g) => {
-        if (g.id === id) {
-          const updated = Math.max(0, g.currentAmount + delta);
-          return { ...g, currentAmount: updated };
-        }
-        return g;
-      })
-    );
-    showToast('Nominal tabungan berhasil disesuaikan.', 'success');
-  };
-
-  const deleteSavingsGoal = (id: string) => {
-    setSavingsGoals((prev) => prev.filter((g) => g.id !== id));
-    showToast('Target tabungan berhasil dihapus.', 'info');
-  };
-
-  // Auth & Settings
-  const loginWithName = (name: string, avatarUrl?: string) => {
+  // --- Auth Actions ---
+  const loginWithName = useCallback((name: string, avatarUrl?: string) => {
     const cleanName = name.trim();
     if (!cleanName) return;
 
-    // If new profile name or changing user, start with fresh empty data
     if (userProfile.name && userProfile.name.toLowerCase() !== cleanName.toLowerCase()) {
       setTransactions([]);
       setBudgets([]);
@@ -330,24 +324,191 @@ export const FinanceProvider: React.FC<{ children: ReactNode }> = ({ children })
     }));
     setIsLoggedIn(true);
     showToast(`Selamat datang di Finora, ${cleanName}!`, 'success');
-  };
 
-  const logout = () => {
+    // If sync enabled and firebase configured, update profile in Firestore
+    if (isSyncEnabled && isConfigured && firebaseUser) {
+      updateProfileFS(firebaseUser.uid, { name: cleanName, avatarUrl: avatarUrl || '' }).catch(console.error);
+    }
+  }, [userProfile.name, isSyncEnabled, isConfigured, firebaseUser, showToast]);
+
+  const logout = useCallback(() => {
     setIsLoggedIn(false);
     showToast('Berhasil keluar dari sesi.', 'info');
-  };
+    stopSyncIfNeeded();
+  }, [showToast, stopSyncIfNeeded]);
 
-  const updateUserProfile = (data: Partial<UserProfile>) => {
+  const updateUserProfile = useCallback((data: Partial<UserProfile>) => {
     setUserProfile((prev) => ({ ...prev, ...data }));
     showToast('Profil pengguna berhasil disimpan.', 'success');
-  };
 
-  const resetAllData = () => {
+    if (isSyncEnabled && isConfigured && firebaseUser) {
+      updateProfileFS(firebaseUser.uid, data).catch(console.error);
+    }
+  }, [isSyncEnabled, isConfigured, firebaseUser, showToast]);
+
+  const setSyncEnabled = useCallback(async (enabled: boolean) => {
+    setIsSyncEnabled(enabled);
+    if (enabled && isConfigured && firebaseUser && isLoggedIn) {
+      showToast('Sinkronisasi cloud diaktifkan.', 'success');
+    } else if (!enabled) {
+      showToast('Sinkronisasi cloud dinonaktifkan. Data tetap tersimpan lokal.', 'info');
+    }
+  }, [isConfigured, firebaseUser, isLoggedIn, showToast]);
+
+  const resetAllData = useCallback(() => {
     setTransactions([]);
     setBudgets([]);
     setSavingsGoals([]);
     showToast('Semua catatan pemasukan, pengeluaran, anggaran, dan tabungan berhasil dibersihkan.', 'info');
-  };
+
+    if (isSyncEnabled && isConfigured && firebaseUser) {
+      clearAllDataFS(firebaseUser.uid).catch(console.error);
+    }
+  }, [isSyncEnabled, isConfigured, firebaseUser, showToast]);
+
+  // --- Transaction Actions ---
+  const addTransaction = useCallback((data: Omit<Transaction, 'id' | 'createdAt'>) => {
+    const newTx: Transaction = {
+      ...data,
+      id: 'tx-' + Date.now().toString(),
+      createdAt: new Date().toISOString(),
+    };
+    setTransactions((prev) => [newTx, ...prev]);
+    showToast('Transaksi berhasil disimpan.', 'success');
+
+    if (isSyncEnabled && isConfigured && firebaseUser) {
+      addTransactionFS(firebaseUser.uid, data).catch(console.error);
+    }
+  }, [isSyncEnabled, isConfigured, firebaseUser, showToast]);
+
+  const updateTransaction = useCallback((id: string, data: Partial<Transaction>) => {
+    setTransactions((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, ...data } : t))
+    );
+    showToast('Transaksi berhasil diperbarui.', 'success');
+
+    if (isSyncEnabled && isConfigured && firebaseUser) {
+      updateTransactionFS(firebaseUser.uid, id, data).catch(console.error);
+    }
+  }, [isSyncEnabled, isConfigured, firebaseUser, showToast]);
+
+  const deleteTransaction = useCallback((id: string) => {
+    setTransactions((prev) => prev.filter((t) => t.id !== id));
+    showToast('Transaksi berhasil dihapus.', 'info');
+
+    if (isSyncEnabled && isConfigured && firebaseUser) {
+      deleteTransactionFS(firebaseUser.uid, id).catch(console.error);
+    }
+  }, [isSyncEnabled, isConfigured, firebaseUser, showToast]);
+
+  const openAddTransactionWithAmount = useCallback((amount?: number) => {
+    if (typeof amount === 'number') {
+      setPrefilledAmount(amount);
+    }
+    setEditingTransaction(null);
+    setIsAddTransactionOpen(true);
+  }, []);
+
+  // --- Budget Actions ---
+  const addBudget = useCallback((data: Omit<Budget, 'id'>) => {
+    const exists = budgets.some(
+      (b) => b.category === data.category && b.month === data.month && b.year === data.year
+    );
+    if (exists) {
+      showToast(`Kategori ${data.category} sudah memiliki anggaran di bulan ini.`, 'error');
+      return;
+    }
+    const newBg: Budget = {
+      ...data,
+      id: 'bg-' + Date.now().toString(),
+    };
+    setBudgets((prev) => [...prev, newBg]);
+    showToast('Anggaran berhasil dibuat.', 'success');
+
+    if (isSyncEnabled && isConfigured && firebaseUser) {
+      addBudgetFS(firebaseUser.uid, data).catch(console.error);
+    }
+  }, [budgets, isSyncEnabled, isConfigured, firebaseUser, showToast]);
+
+  const updateBudget = useCallback((id: string, data: Partial<Budget>) => {
+    setBudgets((prev) => prev.map((b) => (b.id === id ? { ...b, ...data } : b)));
+    showToast('Anggaran berhasil diperbarui.', 'success');
+
+    if (isSyncEnabled && isConfigured && firebaseUser) {
+      updateBudgetFS(firebaseUser.uid, id, data).catch(console.error);
+    }
+  }, [isSyncEnabled, isConfigured, firebaseUser, showToast]);
+
+  const deleteBudget = useCallback((id: string) => {
+    setBudgets((prev) => prev.filter((b) => b.id !== id));
+    showToast('Anggaran berhasil dihapus.', 'info');
+
+    if (isSyncEnabled && isConfigured && firebaseUser) {
+      deleteBudgetFS(firebaseUser.uid, id).catch(console.error);
+    }
+  }, [isSyncEnabled, isConfigured, firebaseUser, showToast]);
+
+  const getSpentByCategory = useCallback((category: Category, month: number, year: number): number => {
+    return transactions
+      .filter((t) => {
+        if (t.type !== 'expense' || t.category !== category) return false;
+        const [tYear, tMonth] = t.date.split('-').map(Number);
+        return tYear === year && tMonth === month;
+      })
+      .reduce((sum, t) => sum + t.amount, 0);
+  }, [transactions]);
+
+  // --- Savings Goal Actions ---
+  const addSavingsGoal = useCallback((data: Omit<SavingsGoal, 'id' | 'createdAt'>) => {
+    const newGoal: SavingsGoal = {
+      ...data,
+      id: 'sg-' + Date.now().toString(),
+      createdAt: new Date().toISOString(),
+    };
+    setSavingsGoals((prev) => [...prev, newGoal]);
+    showToast('Target tabungan berhasil dibuat.', 'success');
+
+    if (isSyncEnabled && isConfigured && firebaseUser) {
+      addSavingsGoalFS(firebaseUser.uid, data).catch(console.error);
+    }
+  }, [isSyncEnabled, isConfigured, firebaseUser, showToast]);
+
+  const updateSavingsGoal = useCallback((id: string, data: Partial<SavingsGoal>) => {
+    setSavingsGoals((prev) =>
+      prev.map((g) => (g.id === id ? { ...g, ...data } : g))
+    );
+    showToast('Target tabungan berhasil diperbarui.', 'success');
+
+    if (isSyncEnabled && isConfigured && firebaseUser) {
+      updateSavingsGoalFS(firebaseUser.uid, id, data).catch(console.error);
+    }
+  }, [isSyncEnabled, isConfigured, firebaseUser, showToast]);
+
+  const adjustSavingsAmount = useCallback((id: string, delta: number) => {
+    setSavingsGoals((prev) =>
+      prev.map((g) => {
+        if (g.id === id) {
+          const updated = Math.max(0, g.currentAmount + delta);
+          return { ...g, currentAmount: updated };
+        }
+        return g;
+      })
+    );
+    showToast('Nominal tabungan berhasil disesuaikan.', 'success');
+
+    if (isSyncEnabled && isConfigured && firebaseUser) {
+      updateSavingsGoalFS(firebaseUser.uid, id, { currentAmount: Math.max(0, delta) }).catch(console.error);
+    }
+  }, [isSyncEnabled, isConfigured, firebaseUser, showToast]);
+
+  const deleteSavingsGoal = useCallback((id: string) => {
+    setSavingsGoals((prev) => prev.filter((g) => g.id !== id));
+    showToast('Target tabungan berhasil dihapus.', 'info');
+
+    if (isSyncEnabled && isConfigured && firebaseUser) {
+      deleteSavingsGoalFS(firebaseUser.uid, id).catch(console.error);
+    }
+  }, [isSyncEnabled, isConfigured, firebaseUser, showToast]);
 
   return (
     <FinanceContext.Provider
@@ -362,6 +523,10 @@ export const FinanceProvider: React.FC<{ children: ReactNode }> = ({ children })
         userProfile,
         updateUserProfile,
         resetAllData,
+        isSyncEnabled,
+        setSyncEnabled,
+        syncStatus,
+        syncError,
         transactions,
         addTransaction,
         updateTransaction,

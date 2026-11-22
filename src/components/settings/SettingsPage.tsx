@@ -10,7 +10,11 @@ import {
   LogOut,
   Upload,
   Trash2,
-  Camera
+  Camera,
+  Cloud,
+  CloudOff,
+  AlertCircle,
+  WifiOff
 } from 'lucide-react';
 import { useFinance } from '../../context/FinanceContext';
 import { Button } from '../common/Button';
@@ -25,7 +29,11 @@ export const SettingsPage: React.FC = () => {
     userProfile, 
     updateUserProfile, 
     logout,
-    resetAllData
+    resetAllData,
+    isSyncEnabled,
+    setSyncEnabled,
+    syncStatus,
+    syncError
   } = useFinance();
 
   const [activeTab, setActiveTab] = useState<SettingsTab>('profile');
@@ -339,6 +347,75 @@ export const SettingsPage: React.FC = () => {
               >
                 Bersihkan Data
               </Button>
+            </div>
+
+            {/* Cloud Sync */}
+            <div className="space-y-3 pt-2">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                Sinkronisasi Cloud (Multi-Perangkat)
+              </h4>
+              <div className="p-3.5 rounded-xl border border-slate-200 bg-white">
+                <div className="flex items-start gap-3 mb-3">
+                  {isSyncEnabled ? (
+                    <Cloud className="w-6 h-6 text-finora-primary flex-shrink-0 mt-0.5" />
+                  ) : (
+                    <CloudOff className="w-6 h-6 text-slate-400 flex-shrink-0 mt-0.5" />
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs sm:text-sm font-semibold text-finora-textPrimary">
+                      {isSyncEnabled ? 'Sinkronisasi Aktif' : 'Sinkronisasi Nonaktif'}
+                    </p>
+                    <p className="text-xs text-slate-500 mt-0.5">
+                      {isSyncEnabled
+                        ? 'Data disinkronkan ke Firebase secara real-time. Buka di perangkat lain dengan nama yang sama.'
+                        : 'Data hanya tersimpan lokal di perangkat ini. Aktifkan untuk akses dari HP, laptop, atau tablet lain.'}
+                    </p>
+                    {syncError && (
+                      <p className="text-xs text-finora-red mt-1.5 flex items-center gap-1">
+                        <AlertCircle className="w-3.5 h-3.5" />
+                        <span>{syncError}</span>
+                      </p>
+                    )}
+                    {syncStatus === 'syncing' && (
+                      <p className="text-xs text-finora-orange mt-1.5 flex items-center gap-1">
+                        <WifiOff className="w-3.5 h-3.5 animate-spin" />
+                        <span>Menyinkronkan...</span>
+                      </p>
+                    )}
+                    {syncStatus === 'error' && !syncError && (
+                      <p className="text-xs text-finora-red mt-1.5 flex items-center gap-1">
+                        <AlertCircle className="w-3.5 h-3.5" />
+                        <span>Kesalahan sinkronisasi. Periksa koneksi atau konfigurasi Firebase.</span>
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      id="sync-toggle"
+                      checked={isSyncEnabled}
+                      onChange={(e) => setSyncEnabled(e.target.checked)}
+                      disabled={syncStatus === 'syncing'}
+                      className="w-4.5 h-4.5 rounded border-slate-300 text-finora-primary focus:ring-finora-primary focus:ring-2"
+                    />
+                    <label htmlFor="sync-toggle" className="text-xs font-medium text-finora-textPrimary cursor-pointer select-none">
+                      Aktifkan Sinkronisasi Cloud
+                    </label>
+                  </div>
+                  <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-full ${
+                    isSyncEnabled
+                      ? 'bg-emerald-100 text-emerald-800'
+                      : 'bg-slate-100 text-slate-500'
+                  }`}>
+                    {isSyncEnabled ? 'Aktif' : 'Mati'}
+                  </span>
+                </div>
+                <p className="text-[10px] text-slate-400 mt-2 leading-relaxed">
+                  Menggunakan Firebase Firestore (gratis hingga 1 GB/bulan). Konfigurasi di file <code className="font-mono bg-slate-100 px-1 rounded">.env</code> (lihat <code className="font-mono bg-slate-100 px-1 rounded">.env.example</code>).
+                </p>
+              </div>
             </div>
           </div>
         </div>

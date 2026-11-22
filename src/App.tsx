@@ -1,5 +1,6 @@
 import React from 'react';
 import { FinanceProvider, useFinance } from './context/FinanceContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { Sidebar } from './components/layout/Sidebar';
 import { Topbar } from './components/layout/Topbar';
 import { BottomNav } from './components/layout/BottomNav';
@@ -102,11 +103,27 @@ const AppContent: React.FC = () => {
   return <MainLayout />;
 };
 
+const AuthWrapper: React.FC = () => {
+  const { loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-finora-bg flex items-center justify-center">
+        <div className="w-10 h-10 border-3 border-finora-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  return <AppContent />;
+};
+
 export function App() {
   return (
-    <FinanceProvider>
-      <AppContent />
-    </FinanceProvider>
+    <AuthProvider>
+      <FinanceProvider>
+        <AuthWrapper />
+      </FinanceProvider>
+    </AuthProvider>
   );
 }
 
