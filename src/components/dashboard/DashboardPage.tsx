@@ -4,15 +4,18 @@ import {
   TrendingUp, 
   TrendingDown, 
   Coins, 
-  Plus
+  Plus,
+  ScanLine
 } from 'lucide-react';
 import { useFinance } from '../../context/FinanceContext';
 import { formatIDR } from '../../utils/formatters';
+import { Button } from '../common/Button';
 import { SummaryCard } from './SummaryCard';
 import { CashFlowChart } from './CashFlowChart';
 import { BudgetOverviewWidget } from './BudgetOverviewWidget';
 import { RecentTransactionsWidget } from './RecentTransactionsWidget';
 import { TransactionDetailModal } from '../transactions/TransactionDetailModal';
+import { ReceiptScanner } from '../scanner/ReceiptScanner';
 import type { Transaction } from '../../types';
 
 export const DashboardPage: React.FC = () => {
@@ -22,10 +25,16 @@ export const DashboardPage: React.FC = () => {
     totalExpense, 
     netCashFlow, 
     openAddTransactionWithAmount,
-    setActivePage 
+    setActivePage,
+    addTransaction
   } = useFinance();
 
   const [selectedTx, setSelectedTx] = useState<Transaction | null>(null);
+  const [isScannerOpen, setIsScannerOpen] = useState(false);
+
+  const handleScannerSave = (transactions: Omit<Transaction, 'id' | 'createdAt'>[]) => {
+    transactions.forEach(tx => addTransaction(tx));
+  };
 
   return (
     <div className="space-y-6 animate-in fade-in duration-200">
@@ -40,6 +49,15 @@ export const DashboardPage: React.FC = () => {
           </p>
         </div>
         <div className="flex items-center gap-3">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setIsScannerOpen(true)}
+            leftIcon={<ScanLine className="w-3.5 h-3.5" />}
+            className="hidden sm:flex"
+          >
+            Scan Struk
+          </Button>
           <button
             onClick={() => openAddTransactionWithAmount()}
             className="flex items-center gap-2 bg-finora-primary hover:bg-finora-primaryDark text-white px-4 py-2.5 rounded-btn text-sm font-medium transition-all shadow-sm active:scale-95"
@@ -116,6 +134,13 @@ export const DashboardPage: React.FC = () => {
           onClose={() => setSelectedTx(null)}
         />
       )}
+
+      {/* Receipt Scanner Modal */}
+      <ReceiptScanner
+        isOpen={isScannerOpen}
+        onClose={() => setIsScannerOpen(false)}
+        onSave={handleScannerSave}
+      />
     </div>
   );
 };
