@@ -238,14 +238,14 @@ export const SettingsPage: React.FC = () => {
 
       {/* Tab 2: Preferences */}
       {activeTab === 'preferences' && (
-        <div className="bg-white dark:bg-finora-bg-secondary rounded-card p-6 border border-finora-border shadow-soft dark:shadow-soft-dark max-w-2xl space-y-5">
-          <div className="space-y-4 divide-y divide-slate-100 dark:divide-finora-border">
+        <div className="card card-hover p-6 max-w-2xl space-y-5">
+          <div className="space-y-4 divide-y divide-finora-border">
             <div className="flex items-center justify-between pt-1">
               <div>
                 <h4 className="text-sm font-semibold text-finora-textPrimary">Mata Uang Baku</h4>
                 <p className="text-xs text-finora-textSecondary">Format baku Finora seluruh transaksi</p>
               </div>
-              <span className="px-3 py-1.5 rounded-lg bg-blue-50 text-finora-primary text-xs font-bold border border-blue-100 dark:bg-finora-light-blue dark:text-blue-300 dark:border-blue-900">
+              <span className="px-3 py-1.5 rounded-lg bg-finora-lightBlue text-finora-primary text-xs font-bold border border-finora-primary/20 dark:bg-finora-light-blue dark:text-blue-300">
                 IDR (Rupiah Indonesia)
               </span>
             </div>
@@ -255,7 +255,7 @@ export const SettingsPage: React.FC = () => {
                 <h4 className="text-sm font-semibold text-finora-textPrimary">Format Tanggal</h4>
                 <p className="text-xs text-finora-textSecondary">Standar penanggalan nasional</p>
               </div>
-              <span className="text-xs font-semibold text-slate-700 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200 dark:text-slate-300 dark:bg-finora-bg-tertiary dark:border-finora-border">
+              <span className="text-xs font-semibold text-finora-textPrimary bg-finora-bgTeritary px-3 py-1.5 rounded-lg border border-finora-border">
                 19 November 2026 (DD MMMM YYYY)
               </span>
             </div>
@@ -286,19 +286,19 @@ export const SettingsPage: React.FC = () => {
 
       {/* Tab 3: Account & Session */}
       {activeTab === 'account' && (
-        <div className="bg-white rounded-card p-6 border border-finora-border shadow-soft max-w-2xl space-y-6">
+        <div className="card card-hover p-6 max-w-2xl space-y-6">
           {/* Current Session Box */}
-          <div className="p-4 rounded-xl border bg-slate-50 border-slate-200">
+          <div className="p-4 rounded-xl border bg-finora-bgTeritary border-finora-border">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 {userProfile.avatarUrl ? (
                   <img
                     src={userProfile.avatarUrl}
                     alt={userProfile.name}
-                    className="w-12 h-12 rounded-full object-cover border border-slate-200"
+                    className="w-12 h-12 rounded-full object-cover border border-finora-border"
                   />
                 ) : (
-                  <div className="w-12 h-12 rounded-full bg-blue-100 text-finora-primary flex items-center justify-center font-bold text-lg border border-slate-200">
+                  <div className="w-12 h-12 rounded-full bg-finora-lightBlue text-finora-primary flex items-center justify-center font-bold text-lg border border-finora-border">
                     {userProfile.name ? userProfile.name.charAt(0).toUpperCase() : <User className="w-6 h-6" />}
                   </div>
                 )}
@@ -307,11 +307,11 @@ export const SettingsPage: React.FC = () => {
                     <h4 className="text-base font-bold text-finora-textPrimary">
                       {userProfile.name || 'Pengguna Finora'}
                     </h4>
-                    <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                    <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-finora-greenLight text-finora-green">
                       Sesi Aktif
                     </span>
                   </div>
-                  <p className="text-xs text-slate-500 mt-0.5">
+                  <p className="text-xs text-finora-textSecondary mt-0.5">
                     Masuk dengan nama (tanpa email atau nomor HP)
                   </p>
                 </div>
@@ -328,7 +328,7 @@ export const SettingsPage: React.FC = () => {
               </Button>
             </div>
 
-            <div className="mt-4 pt-3 border-t border-slate-200 text-xs text-slate-600 flex items-start gap-2">
+            <div className="mt-4 pt-3 border-t border-finora-border text-xs text-finora-textSecondary flex items-start gap-2">
               <ShieldCheck className="w-4 h-4 text-finora-green flex-shrink-0 mt-0.5" />
               <span>
                 Data keuangan Anda disimpan 100% secara lokal pada perangkat ini. Privasi Anda terjaga tanpa membutuhkan kata sandi, email, ataupun nomor telepon.
@@ -338,17 +338,17 @@ export const SettingsPage: React.FC = () => {
 
           {/* Quick Actions */}
           <div className="space-y-3 pt-2">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-finora-textMuted">
               Pengelolaan Data & Reset
             </h4>
 
             {/* Clear All Data */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3.5 rounded-xl border border-slate-200 bg-white gap-3">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3.5 rounded-xl border border-finora-border bg-finora-bgSecondary gap-3">
               <div>
                 <p className="text-xs sm:text-sm font-semibold text-finora-textPrimary">
                   Bersihkan Semua Catatan Keuangan
                 </p>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-finora-textSecondary">
                   Mengosongkan seluruh riwayat transaksi, anggaran, dan tabungan agar benar-benar bersih
                 </p>
               </div>
@@ -356,7 +356,7 @@ export const SettingsPage: React.FC = () => {
                 type="button"
                 variant="outline"
                 size="sm"
-                leftIcon={<RotateCcw className="w-3.5 h-3.5 text-slate-500" />}
+                leftIcon={<RotateCcw className="w-3.5 h-3.5 text-finora-textMuted" />}
                 onClick={() => setIsResetConfirmOpen(true)}
               >
                 Bersihkan Data
@@ -365,21 +365,21 @@ export const SettingsPage: React.FC = () => {
 
             {/* Cloud Sync */}
             <div className="space-y-3 pt-2">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-finora-textMuted">
                 Sinkronisasi Cloud (Multi-Perangkat)
               </h4>
-              <div className="p-3.5 rounded-xl border border-slate-200 bg-white">
+              <div className="p-3.5 rounded-xl border border-finora-border bg-finora-bgSecondary">
                 <div className="flex items-start gap-3 mb-3">
                   {isSyncEnabled ? (
                     <Cloud className="w-6 h-6 text-finora-primary flex-shrink-0 mt-0.5" />
                   ) : (
-                    <CloudOff className="w-6 h-6 text-slate-400 flex-shrink-0 mt-0.5" />
+                    <CloudOff className="w-6 h-6 text-finora-textMuted flex-shrink-0 mt-0.5" />
                   )}
                   <div className="flex-1 min-w-0">
                     <p className="text-xs sm:text-sm font-semibold text-finora-textPrimary">
                       {isSyncEnabled ? 'Sinkronisasi Aktif' : 'Sinkronisasi Nonaktif'}
                     </p>
-                    <p className="text-xs text-slate-500 mt-0.5">
+                    <p className="text-xs text-finora-textSecondary mt-0.5">
                       {isSyncEnabled
                         ? 'Data disinkronkan ke Firebase secara real-time. Buka di perangkat lain dengan nama yang sama.'
                         : 'Data hanya tersimpan lokal di perangkat ini. Aktifkan untuk akses dari HP, laptop, atau tablet lain.'}
@@ -404,7 +404,7 @@ export const SettingsPage: React.FC = () => {
                     )}
                   </div>
                 </div>
-                <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+                <div className="flex items-center justify-between pt-2 border-t border-finora-border">
                   <div className="flex items-center gap-2">
                     <input
                       type="checkbox"
@@ -412,7 +412,7 @@ export const SettingsPage: React.FC = () => {
                       checked={isSyncEnabled}
                       onChange={(e) => setSyncEnabled(e.target.checked)}
                       disabled={syncStatus === 'syncing'}
-                      className="w-4.5 h-4.5 rounded border-slate-300 text-finora-primary focus:ring-finora-primary focus:ring-2"
+                      className="w-4.5 h-4.5 rounded border-finora-border text-finora-primary focus:ring-finora-primary focus:ring-2"
                     />
                     <label htmlFor="sync-toggle" className="text-xs font-medium text-finora-textPrimary cursor-pointer select-none">
                       Aktifkan Sinkronisasi Cloud
@@ -420,14 +420,14 @@ export const SettingsPage: React.FC = () => {
                   </div>
                   <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-full ${
                     isSyncEnabled
-                      ? 'bg-emerald-100 text-emerald-800'
-                      : 'bg-slate-100 text-slate-500'
+                      ? 'bg-finora-greenLight text-finora-green'
+                      : 'bg-finora-bgTeritary text-finora-textMuted'
                   }`}>
                     {isSyncEnabled ? 'Aktif' : 'Mati'}
                   </span>
                 </div>
-                <p className="text-[10px] text-slate-400 mt-2 leading-relaxed">
-                  Menggunakan Firebase Firestore (gratis hingga 1 GB/bulan). Konfigurasi di file <code className="font-mono bg-slate-100 px-1 rounded">.env</code> (lihat <code className="font-mono bg-slate-100 px-1 rounded">.env.example</code>).
+                <p className="text-[10px] text-finora-textMuted mt-2 leading-relaxed">
+                  Menggunakan Firebase Firestore (gratis hingga 1 GB/bulan). Konfigurasi di file <code className="font-mono bg-finora-bgTeritary px-1 rounded">.env</code> (lihat <code className="font-mono bg-finora-bgTeritary px-1 rounded">.env.example</code>).
                 </p>
               </div>
             </div>
@@ -437,13 +437,13 @@ export const SettingsPage: React.FC = () => {
 
       {/* Tab 4: About & Acceptance Criteria */}
       {activeTab === 'about' && (
-        <div className="bg-white rounded-card p-6 border border-finora-border shadow-soft max-w-2xl space-y-6">
+        <div className="card card-hover p-6 max-w-2xl space-y-6">
           <InstallCard />
 
           <div>
             <h3 className="text-lg font-bold text-finora-textPrimary flex items-center gap-2">
               FINORA: Personal Finance App
-              <span className="text-xs font-semibold px-2 py-0.5 rounded bg-blue-100 text-finora-primary">
+              <span className="text-xs font-semibold px-2 py-0.5 rounded bg-finora-lightBlue text-finora-primary">
                 v1.0
               </span>
             </h3>
@@ -453,12 +453,12 @@ export const SettingsPage: React.FC = () => {
           </div>
 
           {/* Acceptance Criteria Status (Bab 10) */}
-          <div className="border border-slate-200 rounded-xl p-4 bg-slate-50">
+          <div className="border border-finora-border rounded-xl p-4 bg-finora-bgTeritary">
             <h4 className="text-xs font-bold uppercase tracking-wider text-finora-textPrimary mb-3 flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4 text-finora-green" />
               Design Acceptance Criteria (Bab 10)
             </h4>
-            <ul className="text-xs space-y-2 text-slate-700">
+            <ul className="text-xs space-y-2 text-finora-textSecondary">
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-finora-green flex-shrink-0" />
                 <span>Semua halaman utama (Dashboard, Transaksi, Anggaran, Tabungan, Laporan, Kalkulator, Pengaturan) tersedia.</span>
@@ -490,7 +490,7 @@ export const SettingsPage: React.FC = () => {
             </ul>
           </div>
 
-          <div className="pt-2 text-xs text-slate-400 flex items-center justify-between">
+          <div className="pt-2 text-xs text-finora-textMuted flex items-center justify-between">
             <span>© 2026 Finora Product Team. All rights reserved.</span>
             <span>Document Status: Specification v1.0</span>
           </div>

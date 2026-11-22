@@ -65,12 +65,12 @@ export const SavingsPage: React.FC = () => {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white rounded-card p-5 border border-finora-border shadow-soft">
+        <div className="card card-hover p-5">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-semibold uppercase text-finora-textSecondary tracking-wider">
               Total Target Tabungan
             </span>
-            <div className="w-8 h-8 rounded-lg bg-purple-50 text-finora-purple flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-finora-purpleLight text-finora-purple flex items-center justify-center dark:bg-finora-purple-light">
               <Target className="w-4 h-4" />
             </div>
           </div>
@@ -82,12 +82,12 @@ export const SavingsPage: React.FC = () => {
           </p>
         </div>
 
-        <div className="bg-white rounded-card p-5 border border-finora-border shadow-soft">
+        <div className="card card-hover p-5">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-semibold uppercase text-finora-textSecondary tracking-wider">
               Total Dana Terkumpul
             </span>
-            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-finora-green flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-finora-greenLight text-finora-green flex items-center justify-center dark:bg-finora-green-light">
               <Coins className="w-4 h-4" />
             </div>
           </div>
@@ -99,19 +99,19 @@ export const SavingsPage: React.FC = () => {
           </p>
         </div>
 
-        <div className="bg-white rounded-card p-5 border border-finora-border shadow-soft">
+        <div className="card card-hover p-5">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-semibold uppercase text-finora-textSecondary tracking-wider">
               Rata-rata Pencapaian
             </span>
-            <div className="w-8 h-8 rounded-lg bg-blue-50 text-finora-primary flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-finora-lightBlue text-finora-primary flex items-center justify-center dark:bg-finora-light-blue">
               <CheckCircle2 className="w-4 h-4" />
             </div>
           </div>
           <h3 className="text-xl sm:text-2xl font-bold text-finora-primary">
             {overallProgress}%
           </h3>
-          <div className="w-full bg-slate-100 rounded-full h-2 mt-2">
+          <div className="w-full bg-finora-border rounded-full h-2 mt-2">
             <div
               className="bg-finora-primary h-2 rounded-full transition-all duration-500"
               style={{ width: `${Math.min(100, overallProgress)}%` }}
@@ -142,11 +142,11 @@ export const SavingsPage: React.FC = () => {
             return (
               <div
                 key={goal.id}
-                className="bg-white rounded-card p-5 sm:p-6 border border-finora-border shadow-soft flex flex-col justify-between relative overflow-hidden"
+                className="card card-hover p-5 sm:p-6 flex flex-col justify-between relative overflow-hidden"
               >
                 {/* Top indicator ribbon if completed */}
                 {isCompleted && (
-                  <div className="absolute top-0 right-0 bg-emerald-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl shadow-sm flex items-center gap-1">
+                  <div className="absolute top-0 right-0 bg-finora-green text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl shadow-sm flex items-center gap-1">
                     <CheckCircle2 className="w-3 h-3" />
                     Target Tercapai!
                   </div>
@@ -167,7 +167,7 @@ export const SavingsPage: React.FC = () => {
                   </div>
 
                   {/* Amounts */}
-                  <div className="bg-finora-bg p-3.5 rounded-xl border border-slate-100 mb-4">
+                  <div className="bg-finora-bgTeritary p-3.5 rounded-xl border border-finora-border mb-4">
                     <div className="flex items-baseline justify-between mb-1">
                       <div>
                         <span className="text-[11px] font-medium text-finora-textSecondary block">
@@ -188,7 +188,7 @@ export const SavingsPage: React.FC = () => {
                     </div>
 
                     {/* Progress Bar */}
-                    <div className="w-full bg-slate-200 rounded-full h-3 overflow-hidden mt-2">
+                    <div className="w-full bg-finora-border rounded-full h-3 overflow-hidden mt-2">
                       <div
                         className="bg-finora-purple h-full rounded-full transition-all duration-500"
                         style={{ width: `${progress}%` }}
@@ -198,7 +198,7 @@ export const SavingsPage: React.FC = () => {
                     <div className="flex justify-between items-center text-xs font-semibold mt-2">
                       <span className="text-finora-purple">Progres: {progress}%</span>
                       <span className="text-finora-textSecondary font-normal">
-                        Kurang: <strong className="text-slate-700">{formatIDR(remainingToSave)}</strong>
+                        Kurang: <strong className="text-finora-textPrimary">{formatIDR(remainingToSave)}</strong>
                       </span>
                     </div>
                   </div>
@@ -206,14 +206,14 @@ export const SavingsPage: React.FC = () => {
                   {/* Deadline date */}
                   {goal.targetDate && (
                     <div className="flex items-center gap-1.5 text-xs text-finora-textSecondary mb-4">
-                      <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                      <Calendar className="w-3.5 h-3.5 text-finora-textMuted" />
                       <span>Target Tanggal: <strong>{formatDateID(goal.targetDate)}</strong></span>
                     </div>
                   )}
                 </div>
 
                 {/* Card Actions */}
-                <div className="flex items-center justify-between gap-2 pt-3 border-t border-slate-100 mt-2">
+                <div className="flex items-center justify-between gap-2 pt-3 border-t border-finora-border mt-2">
                   <Button
                     type="button"
                     variant="secondary"
@@ -227,14 +227,14 @@ export const SavingsPage: React.FC = () => {
                   <div className="flex items-center gap-1">
                     <button
                       onClick={() => handleEdit(goal)}
-                      className="p-1.5 text-slate-400 hover:text-finora-primary hover:bg-blue-50 rounded-lg transition-colors"
+                      className="p-1.5 text-finora-textMuted hover:text-finora-primary hover:bg-finora-lightBlue dark:hover:bg-finora-bgTeritary rounded-lg transition-colors"
                       title="Edit Target"
                     >
                       <Edit3 className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => setGoalToDelete(goal)}
-                      className="p-1.5 text-slate-400 hover:text-finora-red hover:bg-red-50 rounded-lg transition-colors"
+                      className="p-1.5 text-finora-textMuted hover:text-finora-red hover:bg-finora-redLight dark:hover:bg-finora-bgTeritary rounded-lg transition-colors"
                       title="Hapus Target"
                     >
                       <Trash2 className="w-4 h-4" />

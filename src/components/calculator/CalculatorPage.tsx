@@ -165,9 +165,9 @@ export const CalculatorPage: React.FC = () => {
       </div>
 
       {/* Main Calculator Card */}
-      <div className="bg-white rounded-card p-6 border border-finora-border shadow-soft-lg">
+      <div className="card card-hover p-6">
         {/* Screen Display */}
-        <div className="bg-finora-bg rounded-2xl p-4 sm:p-5 border border-slate-200/80 mb-5 text-right">
+        <div className="bg-finora-bgTeritary rounded-2xl p-4 sm:p-5 border border-finora-border mb-5 text-right">
           <div className="min-h-[22px] text-xs sm:text-sm font-medium text-finora-textSecondary overflow-x-auto whitespace-nowrap">
             {expression || '0'}
           </div>
@@ -177,14 +177,14 @@ export const CalculatorPage: React.FC = () => {
         </div>
 
         {/* Custom Discount Calculator */}
-        <div className="mb-4 p-3 bg-slate-50 rounded-xl border border-slate-100">
+        <div className="mb-4 p-3 bg-finora-bgTeritary rounded-xl border border-finora-border">
           <div className="flex items-center justify-between gap-2 mb-2">
-            <span className="text-[11px] font-semibold text-slate-600 flex items-center gap-1.5">
+            <span className="text-[11px] font-semibold text-finora-textSecondary flex items-center gap-1.5">
               <Tag className="w-3.5 h-3.5 text-finora-orange" />
               Hitung Diskon Sendiri
             </span>
             {appliedDiscount !== null && (
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-orange-100 text-orange-800">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-finora-orangeLight text-finora-orange">
                 Diskon {appliedDiscount}% aktif
               </span>
             )}

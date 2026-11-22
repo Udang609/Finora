@@ -112,7 +112,7 @@ export const BudgetPage: React.FC = () => {
 
       {/* 3 Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white rounded-card p-5 border border-finora-border shadow-soft">
+        <div className="card card-hover p-5">
           <span className="text-xs font-semibold uppercase text-finora-textSecondary tracking-wider">
             Total Budget
           </span>
@@ -124,7 +124,7 @@ export const BudgetPage: React.FC = () => {
           </p>
         </div>
 
-        <div className="bg-white rounded-card p-5 border border-finora-border shadow-soft">
+        <div className="card card-hover p-5">
           <span className="text-xs font-semibold uppercase text-finora-textSecondary tracking-wider">
             Total Pengeluaran
           </span>
@@ -136,7 +136,7 @@ export const BudgetPage: React.FC = () => {
           </p>
         </div>
 
-        <div className="bg-white rounded-card p-5 border border-finora-border shadow-soft">
+        <div className="card card-hover p-5">
           <span className="text-xs font-semibold uppercase text-finora-textSecondary tracking-wider">
             Sisa Anggaran
           </span>
@@ -178,18 +178,18 @@ export const BudgetPage: React.FC = () => {
 
               // Status check
               let statusLabel = 'Aman';
-              let statusBadgeClass = 'bg-emerald-50 text-finora-green border-emerald-200';
+              let statusBadgeClass = 'bg-finora-greenLight text-finora-green border-finora-green';
               let progressColorClass = 'bg-finora-green';
               let StatusIcon = CheckCircle;
 
               if (percentage >= 100) {
                 statusLabel = 'Melebihi anggaran';
-                statusBadgeClass = 'bg-red-50 text-finora-red border-red-200';
+                statusBadgeClass = 'bg-finora-redLight text-finora-red border-finora-red';
                 progressColorClass = 'bg-finora-red';
                 StatusIcon = AlertCircle;
               } else if (percentage >= 75) {
                 statusLabel = 'Mendekati batas';
-                statusBadgeClass = 'bg-amber-50 text-finora-orange border-amber-200';
+                statusBadgeClass = 'bg-finora-orangeLight text-finora-orange border-finora-orange';
                 progressColorClass = 'bg-finora-orange';
                 StatusIcon = AlertTriangle;
               }
@@ -197,7 +197,7 @@ export const BudgetPage: React.FC = () => {
               return (
                 <div
                   key={b.id}
-                  className="bg-white rounded-card p-5 border border-finora-border shadow-soft flex flex-col justify-between"
+                  className="card card-hover p-5 flex flex-col justify-between"
                 >
                   <div>
                     {/* Card Top: Category & Status */}
@@ -218,13 +218,13 @@ export const BudgetPage: React.FC = () => {
                       <span className="text-base font-bold text-finora-textPrimary">
                         {formatIDR(spent)}
                       </span>
-                      <span className="text-xs font-semibold text-slate-400">
+                      <span className="text-xs font-semibold text-finora-textMuted">
                         Target: {formatIDR(b.amount)}
                       </span>
                     </div>
 
                     {/* Progress Bar */}
-                    <div className="w-full bg-slate-100 rounded-full h-3 overflow-hidden mb-2">
+                    <div className="w-full bg-finora-border rounded-full h-3 overflow-hidden mb-2">
                       <div
                         className={`h-full rounded-full transition-all duration-500 ${progressColorClass}`}
                         style={{ width: `${Math.min(100, percentage)}%` }}
@@ -243,17 +243,17 @@ export const BudgetPage: React.FC = () => {
                   </div>
 
                   {/* Actions Footer */}
-                  <div className="flex items-center justify-end gap-2 pt-4 mt-4 border-t border-slate-100">
+                  <div className="flex items-center justify-end gap-2 pt-4 mt-4 border-t border-finora-border">
                     <button
                       onClick={() => handleEdit(b)}
-                      className="p-1.5 text-slate-400 hover:text-finora-primary hover:bg-blue-50 rounded-lg transition-colors text-xs flex items-center gap-1 font-medium"
+                      className="p-1.5 text-finora-textMuted hover:text-finora-primary hover:bg-finora-lightBlue dark:hover:bg-finora-bgTeritary rounded-lg transition-colors text-xs flex items-center gap-1 font-medium"
                     >
                       <Edit3 className="w-3.5 h-3.5" />
                       <span>Edit</span>
                     </button>
                     <button
                       onClick={() => setBudgetToDelete(b)}
-                      className="p-1.5 text-slate-400 hover:text-finora-red hover:bg-red-50 rounded-lg transition-colors text-xs flex items-center gap-1 font-medium"
+                      className="p-1.5 text-finora-textMuted hover:text-finora-red hover:bg-finora-redLight dark:hover:bg-finora-bgTeritary rounded-lg transition-colors text-xs flex items-center gap-1 font-medium"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                       <span>Hapus</span>
