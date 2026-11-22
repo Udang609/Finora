@@ -17,6 +17,7 @@ import {
   WifiOff
 } from 'lucide-react';
 import { useFinance } from '../../context/FinanceContext';
+import { useTheme } from '../../context/ThemeContext';
 import { Button } from '../common/Button';
 import { ConfirmDialog } from '../common/ConfirmDialog';
 import { InstallCard } from '../common/InstallCard';
@@ -35,6 +36,8 @@ export const SettingsPage: React.FC = () => {
     syncStatus,
     syncError
   } = useFinance();
+
+  const { toggleTheme, resolvedTheme } = useTheme();
 
   const [activeTab, setActiveTab] = useState<SettingsTab>('profile');
 
@@ -235,14 +238,14 @@ export const SettingsPage: React.FC = () => {
 
       {/* Tab 2: Preferences */}
       {activeTab === 'preferences' && (
-        <div className="bg-white rounded-card p-6 border border-finora-border shadow-soft max-w-2xl space-y-5">
-          <div className="space-y-4 divide-y divide-slate-100">
+        <div className="bg-white dark:bg-finora-bg-secondary rounded-card p-6 border border-finora-border shadow-soft dark:shadow-soft-dark max-w-2xl space-y-5">
+          <div className="space-y-4 divide-y divide-slate-100 dark:divide-finora-border">
             <div className="flex items-center justify-between pt-1">
               <div>
                 <h4 className="text-sm font-semibold text-finora-textPrimary">Mata Uang Baku</h4>
                 <p className="text-xs text-finora-textSecondary">Format baku Finora seluruh transaksi</p>
               </div>
-              <span className="px-3 py-1.5 rounded-lg bg-blue-50 text-finora-primary text-xs font-bold border border-blue-100">
+              <span className="px-3 py-1.5 rounded-lg bg-blue-50 text-finora-primary text-xs font-bold border border-blue-100 dark:bg-finora-light-blue dark:text-blue-300 dark:border-blue-900">
                 IDR (Rupiah Indonesia)
               </span>
             </div>
@@ -252,7 +255,7 @@ export const SettingsPage: React.FC = () => {
                 <h4 className="text-sm font-semibold text-finora-textPrimary">Format Tanggal</h4>
                 <p className="text-xs text-finora-textSecondary">Standar penanggalan nasional</p>
               </div>
-              <span className="text-xs font-semibold text-slate-700 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">
+              <span className="text-xs font-semibold text-slate-700 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200 dark:text-slate-300 dark:bg-finora-bg-tertiary dark:border-finora-border">
                 19 November 2026 (DD MMMM YYYY)
               </span>
             </div>
@@ -260,11 +263,22 @@ export const SettingsPage: React.FC = () => {
             <div className="flex items-center justify-between pt-4">
               <div>
                 <h4 className="text-sm font-semibold text-finora-textPrimary">Tema Tampilan</h4>
-                <p className="text-xs text-finora-textSecondary">Finora Clean Dashboard theme</p>
+                <p className="text-xs text-finora-textSecondary">Pilih mode tampilan aplikasi</p>
               </div>
-              <span className="text-xs font-semibold text-slate-700 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">
-                Light Clean Mode (Bawaan)
-              </span>
+              <div className="flex items-center gap-3">
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={resolvedTheme === 'dark'}
+                    onChange={() => toggleTheme()}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-finora-primary/30 dark:peer-focus:ring-finora-primary/50 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-finora-primary"></div>
+                </label>
+                <span className="text-xs font-medium text-finora-textSecondary">
+                  {resolvedTheme === 'dark' ? 'Dark Mode' : 'Light Mode'}
+                </span>
+              </div>
             </div>
           </div>
         </div>

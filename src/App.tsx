@@ -1,6 +1,7 @@
 import React from 'react';
 import { FinanceProvider, useFinance } from './context/FinanceContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import { Sidebar } from './components/layout/Sidebar';
 import { Topbar } from './components/layout/Topbar';
 import { BottomNav } from './components/layout/BottomNav';
@@ -119,11 +120,13 @@ const AuthWrapper: React.FC = () => {
 
 export function App() {
   return (
-    <AuthProvider>
-      <FinanceProvider>
-        <AuthWrapper />
-      </FinanceProvider>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <FinanceProvider>
+          <AuthWrapper />
+        </FinanceProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

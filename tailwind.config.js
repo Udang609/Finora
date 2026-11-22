@@ -4,6 +4,7 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
@@ -22,10 +23,31 @@ export default {
           orangeLight: '#FEF3C7',
           purple: '#9333EA',
           purpleLight: '#F3E8FF',
+          // Light mode
           bg: '#F5F7FC',
+          bgSecondary: '#FFFFFF',
+          bgTeritary: '#F1F5F9',
           textPrimary: '#172554',
           textSecondary: '#64748B',
+          textMuted: '#94A3B8',
           border: '#E2E8F0',
+          borderStrong: '#CBD5E1',
+          // Dark mode (will be overridden by .dark class)
+          dark: {
+            bg: '#0B1220',
+            bgSecondary: '#111928',
+            bgTeritary: '#1A2438',
+            textPrimary: '#F1F5F9',
+            textSecondary: '#94A3B8',
+            textMuted: '#64748B',
+            border: '#1E2A3E',
+            borderStrong: '#2D3A4E',
+            lightBlue: '#1E3A5F',
+            greenLight: '#064E3B',
+            redLight: '#7F1D1D',
+            orangeLight: '#78350F',
+            purpleLight: '#3B0764',
+          }
         }
       },
       fontFamily: {
@@ -34,6 +56,8 @@ export default {
       boxShadow: {
         'soft': '0 4px 20px -2px rgba(20, 44, 83, 0.06), 0 2px 6px -1px rgba(20, 44, 83, 0.04)',
         'soft-lg': '0 10px 25px -3px rgba(20, 44, 83, 0.08), 0 4px 10px -2px rgba(20, 44, 83, 0.05)',
+        'soft-dark': '0 4px 20px -2px rgba(0, 0, 0, 0.3), 0 2px 6px -1px rgba(0, 0, 0, 0.2)',
+        'soft-lg-dark': '0 10px 25px -3px rgba(0, 0, 0, 0.4), 0 4px 10px -2px rgba(0, 0, 0, 0.3)',
       },
       borderRadius: {
         'card': '14px',
